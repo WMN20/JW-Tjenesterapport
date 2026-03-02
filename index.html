@@ -1,0 +1,1098 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#111827" />
+  <title>Tjenestetimer</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#111827;
+      --card2:#0f172a;
+      --text:#e5e7eb;
+      --muted:#9ca3af;
+      --line:#1f2937;
+      --accent:#60a5fa;
+      --ok:#34d399;
+      --warn:#fbbf24;
+      --danger:#f87171;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: radial-gradient(1200px 800px at 20% -10%, rgba(96,165,250,.18), transparent 55%),
+                  radial-gradient(900px 600px at 90% 10%, rgba(52,211,153,.12), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+      min-height:100vh;
+    }
+    header{
+      position:sticky; top:0; z-index:10;
+      background: rgba(11,18,32,.72);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(31,41,55,.7);
+    }
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 16px;
+      max-width: 1100px; margin:0 auto;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      font-weight:700; letter-spacing:.2px;
+    }
+    .brand .dot{
+      width:12px; height:12px; border-radius:50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(96,165,250,.18);
+    }
+    .actions{display:flex; gap:10px; align-items:center}
+    button, input, select, textarea{
+      font: inherit;
+      color: var(--text);
+    }
+    .btn{
+      border: 1px solid rgba(31,41,55,.9);
+      background: rgba(17,24,39,.75);
+      padding:10px 12px;
+      border-radius: 12px;
+      cursor:pointer;
+      box-shadow: none;
+      transition: .15s transform, .15s background, .15s border-color;
+      user-select:none;
+    }
+    .btn:hover{ background: rgba(17,24,39,.95); border-color: rgba(96,165,250,.35) }
+    .btn:active{ transform: translateY(1px) }
+    .btn.primary{
+      background: rgba(96,165,250,.18);
+      border-color: rgba(96,165,250,.45);
+    }
+    .btn.primary:hover{ background: rgba(96,165,250,.26) }
+    .btn.ghost{
+      background: transparent;
+    }
+    .container{
+      max-width: 1100px;
+      margin: 18px auto;
+      padding: 0 16px 40px;
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 16px;
+    }
+    @media (max-width: 920px){
+      .container{ grid-template-columns: 1fr; }
+    }
+    .card{
+      background: linear-gradient(180deg, rgba(17,24,39,.82), rgba(15,23,42,.82));
+      border: 1px solid rgba(31,41,55,.8);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .card .hd{
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(31,41,55,.7);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .title{font-weight:700}
+    .sub{color:var(--muted); font-size: 13px; margin-top:2px}
+    .card .bd{ padding: 14px 16px; }
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 10px;
+    }
+    @media (max-width: 520px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+    .field label{
+      display:block;
+      color: var(--muted);
+      font-size: 12px;
+      margin: 0 0 6px 2px;
+    }
+    .field input, .field select, .field textarea{
+      width:100%;
+      border-radius: 12px;
+      border: 1px solid rgba(31,41,55,.9);
+      background: rgba(2,6,23,.25);
+      padding: 10px 11px;
+      outline: none;
+    }
+    .field textarea{ min-height: 90px; resize: vertical; }
+    .row{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(31,41,55,.8);
+      background: rgba(2,6,23,.25);
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .meter{
+      height: 10px;
+      background: rgba(31,41,55,.7);
+      border-radius: 999px;
+      overflow:hidden;
+      border: 1px solid rgba(31,41,55,.8);
+    }
+    .meter > div{
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, rgba(96,165,250,.95), rgba(52,211,153,.95));
+    }
+    .hint{color: var(--muted); font-size: 12px; line-height: 1.35}
+    .hr{height:1px; background: rgba(31,41,55,.7); margin: 14px 0}
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+
+    /* Drawer */
+    .backdrop{
+      position: fixed; inset:0;
+      background: rgba(0,0,0,.45);
+      display:none;
+      z-index: 50;
+    }
+    .drawer{
+      position: fixed; top:0; right:0;
+      width: min(420px, 92vw);
+      height: 100vh;
+      background: linear-gradient(180deg, rgba(17,24,39,.96), rgba(15,23,42,.96));
+      border-left: 1px solid rgba(31,41,55,.8);
+      box-shadow: -20px 0 50px rgba(0,0,0,.35);
+      transform: translateX(105%);
+      transition: .2s transform;
+      z-index: 60;
+      display:flex;
+      flex-direction:column;
+    }
+    .drawer.open{ transform: translateX(0) }
+    .backdrop.show{ display:block }
+    .drawer .hd{
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(31,41,55,.7);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .drawer .bd{
+      padding: 14px 16px;
+      overflow:auto;
+    }
+    .toggle{
+      display:flex; align-items:center; justify-content:space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(31,41,55,.75);
+      background: rgba(2,6,23,.22);
+      margin-bottom: 10px;
+    }
+    .toggle small{ color: var(--muted); display:block; margin-top:2px }
+    .switch{
+      width: 48px; height: 28px;
+      border-radius: 999px;
+      border: 1px solid rgba(31,41,55,.9);
+      background: rgba(2,6,23,.35);
+      position: relative;
+      cursor:pointer;
+      flex: 0 0 auto;
+    }
+    .switch::after{
+      content:"";
+      position:absolute;
+      top: 3px; left: 3px;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: rgba(229,231,235,.9);
+      transition: .15s left, .15s background;
+    }
+    .switch.on{
+      background: rgba(52,211,153,.18);
+      border-color: rgba(52,211,153,.55);
+    }
+    .switch.on::after{ left: 23px; background: rgba(52,211,153,.95) }
+
+    .toast{
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(31,41,55,.8);
+      background: rgba(17,24,39,.92);
+      box-shadow: var(--shadow);
+      color: var(--text);
+      display:none;
+      z-index: 100;
+      max-width: min(820px, 92vw);
+      font-size: 14px;
+    }
+    .toast.show{ display:flex; align-items:center; gap:10px; justify-content:space-between; }
+    .toast .msg{ color: var(--text); }
+    .toast .small{ color: var(--muted); font-size: 12px; }
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="topbar">
+    <div class="brand">
+      <div class="dot"></div>
+      <div>
+        <div>Tjenestetimer</div>
+        <div class="sub" id="subtitle">Offline webapp · lokal lagring</div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn ghost" id="btnToday">I dag</button>
+      <button class="btn primary" id="btnSettings">Indstillinger</button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <!-- LEFT: Daily entry -->
+  <section class="card">
+    <div class="hd">
+      <div>
+        <div class="title">Daglig log</div>
+        <div class="sub" id="dateLabel"></div>
+      </div>
+      <div class="row">
+        <button class="btn" id="btnPrevDay">◀</button>
+        <button class="btn" id="btnNextDay">▶</button>
+      </div>
+    </div>
+
+    <div class="bd">
+      <div class="grid">
+        <div class="field">
+          <label>Dato</label>
+          <input id="dateInput" type="date" />
+        </div>
+
+        <div class="field">
+          <label>Bibelstudier (antal)</label>
+          <input id="bibleStudies" type="number" min="0" step="1" placeholder="0" />
+        </div>
+
+        <div class="field">
+          <label>Tjeneste (timer:min)</label>
+          <input id="serviceTime" type="text" placeholder="fx 1:30 eller 2:00" />
+        </div>
+
+        <div class="field" id="bethelFieldWrap">
+          <label>Betel (timer:min)</label>
+          <input id="bethelTime" type="text" placeholder="fx 0:45" />
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="grid" id="plannedWrap">
+        <div class="field">
+          <label>Planlagt tjeneste (timer:min)</label>
+          <input id="plannedServiceTime" type="text" placeholder="fx 2:00" />
+        </div>
+        <div class="field" id="plannedBethelFieldWrap">
+          <label>Planlagt Betel (timer:min)</label>
+          <input id="plannedBethelTime" type="text" placeholder="fx 1:00" />
+        </div>
+      </div>
+
+      <div class="field" style="margin-top:10px">
+        <label>Note (valgfrit)</label>
+        <textarea id="note" placeholder="Kort note…"></textarea>
+      </div>
+
+      <div class="row" style="margin-top:12px; justify-content:space-between">
+        <div class="row">
+          <button class="btn primary" id="btnSave">Gem</button>
+          <button class="btn" id="btnClear">Ryd dagen</button>
+        </div>
+        <div class="pill" id="dayStatus">—</div>
+      </div>
+
+    <div class="hint" style="margin-top:10px">
+  Tip: Du kan skrive tid som <span class="mono">1:30</span> (1 time 30 min)
+</div>
+</div> <!-- lukker .bd -->
+</section>
+
+  <!-- RIGHT: Month summary + report -->
+  <aside class="card">
+    <div class="hd">
+      <div>
+        <div class="title">Månedsoversigt</div>
+        <div class="sub" id="monthLabel"></div>
+      </div>
+      <div class="row">
+        <button class="btn" id="btnPrevMonth">◀</button>
+        <button class="btn" id="btnNextMonth">▶</button>
+      </div>
+    </div>
+
+    <div class="bd">
+      <div class="row" style="justify-content:space-between">
+        <div class="pill">Tjeneste: <span id="sumService">0:00</span></div>
+        <div class="pill" id="sumBethelWrap">Betel: <span id="sumBethel">0:00</span></div>
+      </div>
+
+      <div class="row" style="margin-top:10px; justify-content:space-between">
+        <div class="pill">Bibelstudier: <span id="sumStudies">0</span></div>
+        <div class="pill">Dage logget: <span id="sumDays">0</span></div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div>
+        <div class="row" style="justify-content:space-between; margin-bottom:8px">
+          <div class="pill">Mål (periode): <span id="goalText">—</span></div>
+          <div class="pill">Progress: <span id="progressText">0%</span></div>
+        </div>
+        <div class="meter"><div id="meterFill"></div></div>
+        <div class="hint" style="margin-top:8px" id="goalHint">—</div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="field">
+        <label>Rapport-tekst (genereret)</label>
+        <textarea id="reportText" class="mono" readonly></textarea>
+      </div>
+
+      <div class="row" style="margin-top:10px">
+        <button class="btn" id="btnGenerate">Generér</button>
+        <button class="btn" id="btnCopy">Kopiér</button>
+      </div>
+
+      <div class="row" style="margin-top:10px">
+        <button class="btn primary" id="btnSMS">Åbn SMS</button>
+        <button class="btn primary" id="btnMail">Åbn Mail</button>
+      </div>
+
+      <div class="hint" style="margin-top:10px">
+        “Åbn SMS/Mail” sender ikke automatisk — den åbner bare appen med teksten udfyldt.
+      </div>
+    </div>
+  </aside>
+</div>
+
+<!-- Drawer -->
+<div class="backdrop" id="backdrop"></div>
+<aside class="drawer" id="drawer">
+  <div class="hd">
+    <div>
+      <div class="title">Indstillinger</div>
+      <div class="sub">Alt gemmes lokalt på enheden</div>
+    </div>
+    <button class="btn" id="btnClose">Luk</button>
+  </div>
+
+  <div class="bd">
+    <div class="field">
+      <label>Navn (valgfrit)</label>
+      <input id="setName" type="text" placeholder="fx Steph" />
+    </div>
+
+    <div class="hr"></div>
+
+    <div class="grid">
+      <div class="field">
+        <label>Mål (timer)</label>
+        <input id="setGoalHours" type="number" min="0" step="0.25" placeholder="fx 50" />
+      </div>
+      <div class="field">
+        <label>Periode</label>
+        <select id="setGoalUnit">
+          <option value="week">Uge</option>
+          <option value="month" selected>Måned</option>
+          <option value="year">År</option>
+        </select>
+      </div>
+    </div>
+    <div class="hint" style="margin-top:8px">
+      Brug fx 50 pr. måned, eller 600 pr. år. Du kan justere frit.
+    </div>
+
+    <div class="hr"></div>
+
+    <div class="toggle">
+      <div>
+        <div style="font-weight:650">Vis Betel</div>
+        <small>Slå fra hvis I aldrig bruger Betel-feltet.</small>
+      </div>
+      <div class="switch" id="setShowBethel"></div>
+    </div>
+
+    <div class="toggle">
+      <div>
+        <div style="font-weight:650">Vis planlagte timer</div>
+        <small>Aktiver “planlagt vs. faktisk” felter.</small>
+      </div>
+      <div class="switch" id="setShowPlanned"></div>
+    </div>
+
+    <div class="hr"></div>
+
+    <div class="grid">
+      <div class="field">
+        <label>SMS-nummer (valgfrit)</label>
+        <input id="setSMS" type="tel" placeholder="fx +45xxxxxxxx" />
+      </div>
+      <div class="field">
+        <label>Email (valgfrit)</label>
+        <input id="setEmail" type="email" placeholder="fx ældste@example.com" />
+      </div>
+    </div>
+
+
+    <div class="hr"></div>
+
+    <div class="field">
+      <label>Rapport-skabelon</label>
+      <textarea id="setTemplate" class="mono"></textarea>
+      <div class="hint" style="margin-top:8px">
+        Brug placeholders:
+        <span class="mono">{MONTH}</span>,
+        <span class="mono">{YEAR}</span>,
+        <span class="mono">{NAME}</span>,
+        <span class="mono">{SERVICE}</span>,
+        <span class="mono">{BETHEL}</span>,
+        <span class="mono">{STUDIES}</span>,
+        <span class="mono">{DAYS}</span>.
+      </div>
+    </div>
+
+<div class="row" style="margin-top:12px; justify-content:space-between">
+  <button class="btn primary" id="btnSaveSettings">Gem indstillinger</button>
+  <button class="btn" id="btnResetTimes">Nulstil al tid</button>
+  <button class="btn" id="btnResetAll">Nulstil alt</button>
+</div>
+  </div>
+</aside>
+
+<div class="toast" id="toast">
+  <div>
+    <div class="msg" id="toastMsg">—</div>
+    <div class="small" id="toastSmall"></div>
+  </div>
+  <button class="btn" id="toastBtn" style="display:none">OK</button>
+</div>
+
+<script>
+/** ---------------------------
+ *  Minimal offline log app
+ *  - localStorage only
+ *  - one entry per date
+ *  --------------------------*/
+
+const LS_KEY = "ministry_app_v1";
+
+const DEFAULTS = {
+  settings: {
+    name: "",
+    goalHours: 50,
+    goalUnit: "month", // week | month | year
+    showBethel: true,
+    showPlanned: false,
+    smsNumber: "",
+    emailTo: "",
+    template:
+`Tjenesterapport – {MONTH} {YEAR}
+Navn: {NAME}
+Tjeneste: {SERVICE}
+Betel: {BETHEL}
+Bibelstudier: {STUDIES}
+Dage logget: {DAYS}`
+  },
+  entries: {
+    // "YYYY-MM-DD": { serviceMin, bethelMin, studies, note, plannedServiceMin, plannedBethelMin }
+  }
+};
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if(!raw) return structuredClone(DEFAULTS);
+    const parsed = JSON.parse(raw);
+    // shallow merge defaults to handle future fields
+    return {
+      settings: { ...DEFAULTS.settings, ...(parsed.settings || {}) },
+      entries:  { ...DEFAULTS.entries,  ...(parsed.entries  || {}) }
+    };
+  } catch {
+    return structuredClone(DEFAULTS);
+  }
+}
+function saveState(){
+  localStorage.setItem(LS_KEY, JSON.stringify(state));
+}
+
+function toast(msg, small="", buttonText=""){
+  const t = $("#toast");
+  $("#toastMsg").textContent = msg;
+  $("#toastSmall").textContent = small;
+  const btn = $("#toastBtn");
+  if(buttonText){
+    btn.style.display = "inline-flex";
+    btn.textContent = buttonText;
+    btn.onclick = ()=> t.classList.remove("show");
+  } else {
+    btn.style.display = "none";
+  }
+  t.classList.add("show");
+  setTimeout(()=> t.classList.remove("show"), 2600);
+}
+
+function $(sel){ return document.querySelector(sel); }
+function pad2(n){ return String(n).padStart(2,"0"); }
+function todayISO(){
+  const d = new Date();
+  return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+}
+function monthNameDA(mIndex){
+  const names = ["Januar","Februar","Marts","April","Maj","Juni","Juli","August","September","Oktober","November","December"];
+  return names[mIndex] || "";
+}
+function parseTimeToMinutes(input){
+  const s = (input || "").trim().toLowerCase();
+  if(!s) return 0;
+
+  // formats: "1:30" | "90m" | "1.5h" | "2" (hours)
+  if(s.includes(":")){
+    const [h, m] = s.split(":");
+    const hh = Number(h);
+    const mm = Number(m);
+    if(Number.isFinite(hh) && Number.isFinite(mm) && hh >= 0 && mm >= 0 && mm < 60){
+      return Math.round(hh * 60 + mm);
+    }
+    return NaN;
+  }
+
+  if(s.endsWith("m")){
+    const n = Number(s.slice(0,-1));
+    return Number.isFinite(n) && n >= 0 ? Math.round(n) : NaN;
+  }
+
+  if(s.endsWith("h")){
+    const n = Number(s.slice(0,-1));
+    return Number.isFinite(n) && n >= 0 ? Math.round(n * 60) : NaN;
+  }
+
+  // plain number => hours
+  const n = Number(s);
+  return Number.isFinite(n) && n >= 0 ? Math.round(n * 60) : NaN;
+}
+function minutesToHHMM(min){
+  const m = Math.max(0, Math.round(min || 0));
+  const hh = Math.floor(m / 60);
+  const mm = m % 60;
+  return `${hh}:${pad2(mm)}`;
+}
+function addDaysISO(iso, delta){
+  const d = new Date(iso + "T00:00:00");
+  d.setDate(d.getDate() + delta);
+  return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+}
+
+let state = loadState();
+let currentDate = todayISO();
+let currentMonthAnchor = currentDate.slice(0,7) + "-01";
+
+/** UI refs */
+const ui = {
+  dateLabel: $("#dateLabel"),
+  dateInput: $("#dateInput"),
+  bibleStudies: $("#bibleStudies"),
+  serviceTime: $("#serviceTime"),
+  bethelTime: $("#bethelTime"),
+  note: $("#note"),
+  plannedServiceTime: $("#plannedServiceTime"),
+  plannedBethelTime: $("#plannedBethelTime"),
+
+  bethelFieldWrap: $("#bethelFieldWrap"),
+  plannedWrap: $("#plannedWrap"),
+  plannedBethelFieldWrap: $("#plannedBethelFieldWrap"),
+
+  dayStatus: $("#dayStatus"),
+  subtitle: $("#subtitle"),
+
+  monthLabel: $("#monthLabel"),
+  sumService: $("#sumService"),
+  sumBethel: $("#sumBethel"),
+  sumBethelWrap: $("#sumBethelWrap"),
+  sumStudies: $("#sumStudies"),
+  sumDays: $("#sumDays"),
+  goalText: $("#goalText"),
+  progressText: $("#progressText"),
+  meterFill: $("#meterFill"),
+  goalHint: $("#goalHint"),
+  reportText: $("#reportText"),
+
+  drawer: $("#drawer"),
+  backdrop: $("#backdrop"),
+
+  setName: $("#setName"),
+  setGoalHours: $("#setGoalHours"),
+  setGoalUnit: $("#setGoalUnit"),
+  setShowBethel: $("#setShowBethel"),
+  setShowPlanned: $("#setShowPlanned"),
+  setSMS: $("#setSMS"),
+  setEmail: $("#setEmail"),
+  setTemplate: $("#setTemplate"),
+};
+
+function openDrawer(){
+  ui.backdrop.classList.add("show");
+  ui.drawer.classList.add("open");
+}
+function closeDrawer(){
+  ui.backdrop.classList.remove("show");
+  ui.drawer.classList.remove("open");
+}
+
+function switchSet(el, on){
+  el.classList.toggle("on", !!on);
+  el.dataset.on = on ? "1" : "0";
+}
+function switchGet(el){
+  return el.dataset.on === "1";
+}
+
+function applySettingsToUI(){
+  const s = state.settings;
+
+  ui.subtitle.textContent = s.name ? `Hej, ${s.name} · lokal lagring` : "Offline webapp · lokal lagring";
+
+  // toggles
+  ui.bethelFieldWrap.style.display = s.showBethel ? "" : "none";
+  ui.sumBethelWrap.style.display = s.showBethel ? "" : "none";
+
+  ui.plannedWrap.style.display = s.showPlanned ? "" : "none";
+  ui.plannedBethelFieldWrap.style.display = (s.showPlanned && s.showBethel) ? "" : "none";
+
+  // settings drawer values
+  ui.setName.value = s.name || "";
+  ui.setGoalHours.value = s.goalHours ?? 0;
+  ui.setGoalUnit.value = s.goalUnit || "month";
+  ui.setSMS.value = s.smsNumber || "";
+  ui.setEmail.value = s.emailTo || "";
+  ui.setTemplate.value = s.template || DEFAULTS.settings.template;
+
+  switchSet(ui.setShowBethel, !!s.showBethel);
+  switchSet(ui.setShowPlanned, !!s.showPlanned);
+}
+
+function loadEntryToForm(iso){
+  currentDate = iso;
+  ui.dateInput.value = iso;
+
+  const entry = state.entries[iso] || {};
+  ui.bibleStudies.value = entry.studies ?? 0;
+  ui.serviceTime.value = entry.serviceMin ? minutesToHHMM(entry.serviceMin) : "";
+  ui.bethelTime.value = entry.bethelMin ? minutesToHHMM(entry.bethelMin) : "";
+  ui.note.value = entry.note || "";
+
+  ui.plannedServiceTime.value = entry.plannedServiceMin ? minutesToHHMM(entry.plannedServiceMin) : "";
+  ui.plannedBethelTime.value = entry.plannedBethelMin ? minutesToHHMM(entry.plannedBethelMin) : "";
+
+  const d = new Date(iso + "T00:00:00");
+  ui.dateLabel.textContent = `${d.getDate()}. ${monthNameDA(d.getMonth())} ${d.getFullYear()}`;
+  updateDayStatus();
+}
+
+function updateDayStatus(){
+  const iso = currentDate;
+  const e = state.entries[iso];
+  const s = state.settings;
+
+  if(!e){
+    ui.dayStatus.textContent = "Ingen log for dagen";
+    ui.dayStatus.style.borderColor = "rgba(31,41,55,.8)";
+    ui.dayStatus.style.color = "var(--muted)";
+    return;
+  }
+
+  const dayMin = (e.serviceMin||0) + (s.showBethel ? (e.bethelMin||0) : 0);
+  const dayHours = dayMin / 60;
+
+  const perDayTarget = estimateDailyTargetHours(s.goalHours, s.goalUnit, iso);
+  const ok = perDayTarget > 0 ? dayHours >= perDayTarget : dayHours > 0;
+
+  ui.dayStatus.textContent = perDayTarget > 0
+    ? (ok ? `Mål nået i dag ✓ (${dayHours.toFixed(2)}h / ${perDayTarget.toFixed(2)}h)` : `Ikke nået (${dayHours.toFixed(2)}h / ${perDayTarget.toFixed(2)}h)`)
+    : (dayHours > 0 ? `Logget: ${dayHours.toFixed(2)}h` : "Tom dag");
+
+  ui.dayStatus.style.borderColor = ok ? "rgba(52,211,153,.55)" : "rgba(251,191,36,.45)";
+  ui.dayStatus.style.color = ok ? "var(--ok)" : "var(--warn)";
+}
+
+function estimateDailyTargetHours(goalHours, unit, iso){
+  // simple estimate: spread the goal across period days
+  // week => 7 days
+  // month => days in that month
+  // year => days in that year
+  const g = Number(goalHours) || 0;
+  if(g <= 0) return 0;
+
+  const d = new Date(iso + "T00:00:00");
+  if(unit === "week") return g / 7;
+
+  if(unit === "month"){
+    const days = new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
+    return g / days;
+  }
+
+  if(unit === "year"){
+    const year = d.getFullYear();
+    const days = ((year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0)) ? 366 : 365;
+    return g / days;
+  }
+
+  return 0;
+}
+
+function saveEntryFromForm(){
+  const iso = ui.dateInput.value;
+  if(!iso){
+    toast("Vælg en dato først");
+    return;
+  }
+
+  const serviceMin = parseTimeToMinutes(ui.serviceTime.value);
+  const bethelMin = parseTimeToMinutes(ui.bethelTime.value);
+  const plannedServiceMin = parseTimeToMinutes(ui.plannedServiceTime.value);
+  const plannedBethelMin = parseTimeToMinutes(ui.plannedBethelTime.value);
+
+  if([serviceMin, bethelMin, plannedServiceMin, plannedBethelMin].some(v => Number.isNaN(v))){
+    toast("Tidsformat fejl", "Brug fx 1:30, 90m, 1.5h");
+    return;
+  }
+
+  const studies = Math.max(0, Number(ui.bibleStudies.value || 0));
+  const note = (ui.note.value || "").trim();
+
+  // If everything empty -> remove entry
+  const hasAny =
+    (serviceMin || 0) > 0 ||
+    (bethelMin || 0) > 0 ||
+    studies > 0 ||
+    note.length > 0 ||
+    (plannedServiceMin || 0) > 0 ||
+    (plannedBethelMin || 0) > 0;
+
+  if(!hasAny){
+    delete state.entries[iso];
+    saveState();
+    toast("Dagen er tom", "Ingen data gemt");
+    refreshAll();
+    return;
+  }
+
+  state.entries[iso] = {
+    serviceMin: serviceMin || 0,
+    bethelMin: bethelMin || 0,
+    plannedServiceMin: plannedServiceMin || 0,
+    plannedBethelMin: plannedBethelMin || 0,
+    studies: Number.isFinite(studies) ? studies : 0,
+    note
+  };
+
+  saveState();
+  toast("Gemt", iso);
+  refreshAll();
+}
+
+function clearDay(){
+  const iso = ui.dateInput.value;
+  if(!iso) return;
+  delete state.entries[iso];
+  saveState();
+  toast("Rykket", "Dagen er ryddet");
+  refreshAll();
+}
+
+function monthEntries(year, monthIndex){
+  const res = [];
+  const ym = `${year}-${pad2(monthIndex+1)}`;
+  for(const [date, entry] of Object.entries(state.entries)){
+    if(date.startsWith(ym)){
+      res.push({ date, entry });
+    }
+  }
+  res.sort((a,b)=> a.date.localeCompare(b.date));
+  return res;
+}
+
+function calcMonthSummary(anchorISO){
+  const d = new Date(anchorISO + "T00:00:00");
+  const year = d.getFullYear();
+  const monthIndex = d.getMonth();
+
+  const items = monthEntries(year, monthIndex);
+  let serviceMin = 0, bethelMin = 0, studies = 0;
+  for(const it of items){
+    serviceMin += it.entry.serviceMin || 0;
+    bethelMin += it.entry.bethelMin || 0;
+    studies += it.entry.studies || 0;
+  }
+
+  return {
+    year, monthIndex,
+    days: items.length,
+    serviceMin, bethelMin, studies
+  };
+}
+
+function goalForDisplayedPeriod(summary){
+  const s = state.settings;
+  const goalHours = Number(s.goalHours) || 0;
+  if(goalHours <= 0) return { goalMin: 0, label: "Intet mål sat" };
+
+  if(s.goalUnit === "month"){
+    return { goalMin: Math.round(goalHours * 60), label: `${goalHours} timer / måned` };
+  }
+  if(s.goalUnit === "week"){
+    // convert week goal to month goal approx: goalWeek * (daysInMonth/7)
+    const daysInMonth = new Date(summary.year, summary.monthIndex+1, 0).getDate();
+    const goalMin = Math.round(goalHours * 60 * (daysInMonth / 7));
+    return { goalMin, label: `${goalHours} timer / uge (≈ ${minutesToHHMM(goalMin)} i måneden)` };
+  }
+  if(s.goalUnit === "year"){
+    // convert year goal to month goal: year/12
+    const goalMin = Math.round(goalHours * 60 / 12);
+    return { goalMin, label: `${goalHours} timer / år (≈ ${minutesToHHMM(goalMin)} pr. måned)` };
+  }
+  return { goalMin: 0, label: "Ukendt mål" };
+}
+
+function generateReportText(summary){
+  const s = state.settings;
+  const month = monthNameDA(summary.monthIndex);
+  const year = summary.year;
+
+  const service = minutesToHHMM(summary.serviceMin);
+  const bethel = s.showBethel ? minutesToHHMM(summary.bethelMin) : "0:00";
+  const studies = summary.studies;
+  const days = summary.days;
+  const name = (s.name || "").trim() || "—";
+
+  const tpl = (s.template || DEFAULTS.settings.template);
+  return tpl
+    .replaceAll("{MONTH}", month)
+    .replaceAll("{YEAR}", String(year))
+    .replaceAll("{NAME}", name)
+    .replaceAll("{SERVICE}", service)
+    .replaceAll("{BETHEL}", bethel)
+    .replaceAll("{STUDIES}", String(studies))
+    .replaceAll("{DAYS}", String(days));
+}
+
+function refreshMonthPanel(){
+  const d = new Date(currentMonthAnchor + "T00:00:00");
+  const summary = calcMonthSummary(currentMonthAnchor);
+
+  ui.monthLabel.textContent = `${monthNameDA(d.getMonth())} ${d.getFullYear()}`;
+
+  ui.sumService.textContent = minutesToHHMM(summary.serviceMin);
+  ui.sumBethel.textContent = minutesToHHMM(summary.bethelMin);
+  ui.sumStudies.textContent = String(summary.studies);
+  ui.sumDays.textContent = String(summary.days);
+
+  const goal = goalForDisplayedPeriod(summary);
+  ui.goalText.textContent = goal.label;
+
+  const totalMin = summary.serviceMin + (state.settings.showBethel ? summary.bethelMin : 0);
+  const pct = goal.goalMin > 0 ? Math.min(100, Math.round((totalMin / goal.goalMin) * 100)) : 0;
+  ui.progressText.textContent = `${pct}%`;
+  ui.meterFill.style.width = `${pct}%`;
+
+  const daysInMonth = new Date(summary.year, summary.monthIndex+1, 0).getDate();
+  const perDay = estimateDailyTargetHours(state.settings.goalHours, state.settings.goalUnit, `${summary.year}-${pad2(summary.monthIndex+1)}-01`);
+  ui.goalHint.textContent = (state.settings.goalHours > 0)
+    ? `Estimat: ~${perDay.toFixed(2)} timer pr. dag (fordelt over perioden). Dage i måneden: ${daysInMonth}.`
+    : "Sæt et mål i indstillinger for at se progress.";
+
+  ui.reportText.value = generateReportText(summary);
+}
+
+function refreshAll(){
+  applySettingsToUI();
+  loadEntryToForm(currentDate);
+  refreshMonthPanel();
+}
+
+function openSMS(phone, body){
+  const encoded = encodeURIComponent(body);
+  const p = (phone || "").trim();
+
+  // Try iOS format first, then Android
+  const urlIOS = `sms:${encodeURIComponent(p)}&body=${encoded}`;
+  const urlAndroid = `sms:${encodeURIComponent(p)}?body=${encoded}`;
+
+  window.location.href = urlIOS;
+  setTimeout(()=> { window.location.href = urlAndroid; }, 300);
+}
+
+function openEmail(to, subject, body){
+  const url =
+    `mailto:${encodeURIComponent((to||"").trim())}` +
+    `?subject=${encodeURIComponent(subject)}` +
+    `&body=${encodeURIComponent(body)}`;
+  window.location.href = url;
+}
+
+function copyText(text){
+  navigator.clipboard?.writeText(text).then(()=>{
+    toast("Kopieret", "Teksten ligger i udklipsholderen");
+  }).catch(()=>{
+    // fallback
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    ta.remove();
+    toast("Kopieret", "Teksten ligger i udklipsholderen");
+  });
+}
+
+/** Events */
+$("#btnSettings").addEventListener("click", openDrawer);
+$("#btnClose").addEventListener("click", closeDrawer);
+ui.backdrop.addEventListener("click", closeDrawer);
+
+$("#btnToday").addEventListener("click", ()=> {
+  currentDate = todayISO();
+  currentMonthAnchor = currentDate.slice(0,7) + "-01";
+  refreshAll();
+});
+
+$("#btnPrevDay").addEventListener("click", ()=> {
+  currentDate = addDaysISO(currentDate, -1);
+  refreshAll();
+});
+$("#btnNextDay").addEventListener("click", ()=> {
+  currentDate = addDaysISO(currentDate, +1);
+  refreshAll();
+});
+
+$("#btnPrevMonth").addEventListener("click", ()=> {
+  const d = new Date(currentMonthAnchor + "T00:00:00");
+  d.setMonth(d.getMonth() - 1);
+  currentMonthAnchor = `${d.getFullYear()}-${pad2(d.getMonth()+1)}-01`;
+  refreshMonthPanel();
+});
+$("#btnNextMonth").addEventListener("click", ()=> {
+  const d = new Date(currentMonthAnchor + "T00:00:00");
+  d.setMonth(d.getMonth() + 1);
+  currentMonthAnchor = `${d.getFullYear()}-${pad2(d.getMonth()+1)}-01`;
+  refreshMonthPanel();
+});
+
+ui.dateInput.addEventListener("change", (e)=> {
+  currentDate = e.target.value || currentDate;
+  currentMonthAnchor = currentDate.slice(0,7) + "-01";
+  refreshAll();
+});
+
+$("#btnSave").addEventListener("click", saveEntryFromForm);
+$("#btnClear").addEventListener("click", clearDay);
+
+$("#btnGenerate").addEventListener("click", ()=> {
+  refreshMonthPanel();
+  toast("Genereret", "Rapport-tekst opdateret");
+});
+$("#btnCopy").addEventListener("click", ()=> copyText(ui.reportText.value));
+
+$("#btnSMS").addEventListener("click", ()=> {
+  const d = new Date(currentMonthAnchor + "T00:00:00");
+  const summary = calcMonthSummary(currentMonthAnchor);
+  const text = generateReportText(summary);
+  openSMS(state.settings.smsNumber, text);
+});
+
+$("#btnMail").addEventListener("click", ()=> {
+  const d = new Date(currentMonthAnchor + "T00:00:00");
+  const summary = calcMonthSummary(currentMonthAnchor);
+  const body = generateReportText(summary);
+  const subject = `Tjenesterapport – ${monthNameDA(d.getMonth())} ${d.getFullYear()}`;
+  openEmail(state.settings.emailTo, subject, body);
+});
+
+/** Settings toggles click */
+ui.setShowBethel.addEventListener("click", ()=> switchSet(ui.setShowBethel, !switchGet(ui.setShowBethel)));
+ui.setShowPlanned.addEventListener("click", ()=> switchSet(ui.setShowPlanned, !switchGet(ui.setShowPlanned)));
+
+$("#btnSaveSettings").addEventListener("click", ()=> {
+  const goalHours = Number(ui.setGoalHours.value || 0);
+  const goalUnit = ui.setGoalUnit.value;
+
+  state.settings.name = (ui.setName.value || "").trim();
+  state.settings.goalHours = Number.isFinite(goalHours) && goalHours >= 0 ? goalHours : 0;
+  state.settings.goalUnit = goalUnit === "week" || goalUnit === "month" || goalUnit === "year" ? goalUnit : "month";
+  state.settings.showBethel = switchGet(ui.setShowBethel);
+  state.settings.showPlanned = switchGet(ui.setShowPlanned);
+  state.settings.smsNumber = (ui.setSMS.value || "").trim();
+  state.settings.emailTo = (ui.setEmail.value || "").trim();
+  state.settings.template = (ui.setTemplate.value || "").trim() || DEFAULTS.settings.template;
+
+  saveState();
+  toast("Indstillinger gemt");
+  closeDrawer();
+  refreshAll();
+});
+
+$("#btnResetAll").addEventListener("click", ()=> {
+  if(!confirm("Nulstil ALT? (sletter alle logs og indstillinger)")) return;
+  state = structuredClone(DEFAULTS);
+  saveState();
+  toast("Nulstillet", "Alt er slettet");
+  closeDrawer();
+  currentDate = todayISO();
+  currentMonthAnchor = currentDate.slice(0,7) + "-01";
+  refreshAll();
+});
+
+$("#btnResetTimes").addEventListener("click", ()=> {
+  if(!confirm("Nulstil ALLE tider? (sletter alle dags-logs, men beholder indstillinger)")) return;
+
+  state.entries = {};
+  saveState();
+
+  toast("Tider nulstillet", "Alle tidsregistreringer er slettet");
+  closeDrawer();
+
+  currentDate = todayISO();
+  currentMonthAnchor = currentDate.slice(0,7) + "-01";
+  refreshAll();
+});
+
+/** Init */
+(function init(){
+  ui.dateInput.value = currentDate;
+  currentMonthAnchor = currentDate.slice(0,7) + "-01";
+  refreshAll();
+})();
+</script>
+</body>
+</html>
+
