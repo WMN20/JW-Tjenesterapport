@@ -218,9 +218,9 @@
     .btn.ghost{ background: transparent; }
 
     .container{
-    max-width: 1100px;
-    margin: 18px auto;
-    padding: 0 16px calc(140px + env(safe-area-inset-bottom));
+      max-width: 1100px;
+      margin: 18px auto;
+      padding: 0 16px calc(140px + env(safe-area-inset-bottom));
     }
 
     .card{
@@ -375,75 +375,6 @@
     .dayCell.logged .dot{ display:block; background: color-mix(in srgb, var(--ok) 95%, transparent); }
     .dayCell.planned .dot{ display:block; background: color-mix(in srgb, var(--accent) 95%, transparent); }
 
-    /* Drawer */
-    .backdrop{
-      position: fixed; inset:0;
-      background: rgba(0,0,0,.45);
-      display:none;
-      z-index: 50;
-    }
-    .drawer{
-      position: fixed; top:0; right:0;
-      width: min(420px, 92vw);
-      height: 100dvh;
-      background: linear-gradient(180deg, color-mix(in srgb, var(--card) 96%, transparent), color-mix(in srgb, var(--card2) 96%, transparent));
-      border-left: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
-      box-shadow: -20px 0 50px rgba(0,0,0,.35);
-      transform: translateX(105%);
-      transition: .2s transform;
-      z-index: 60;
-      display:flex;
-      flex-direction:column;
-    }
-    .drawer.open{ transform: translateX(0) }
-    .backdrop.show{ display:block }
-    .drawer .hd{
-      padding: 14px 16px;
-      border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
-    }
-    .drawer .bd{
-    padding: 14px 16px;
-    overflow:auto;
-    padding-bottom: calc(24px + env(safe-area-inset-bottom));
-    }
-    .toggle{
-      display:flex; align-items:center; justify-content:space-between;
-      gap: 12px;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid color-mix(in srgb, var(--line) 75%, transparent);
-      background: color-mix(in srgb, var(--inputBg) 85%, transparent);
-      margin-bottom: 10px;
-    }
-    .toggle small{ color: var(--muted); display:block; margin-top:2px }
-    .switch{
-      width: 48px; height: 28px;
-      border-radius: 999px;
-      border: 1px solid color-mix(in srgb, var(--line) 90%, transparent);
-      background: color-mix(in srgb, var(--inputBg) 100%, transparent);
-      position: relative;
-      cursor:pointer;
-      flex: 0 0 auto;
-    }
-    .switch::after{
-      content:"";
-      position:absolute;
-      top: 3px; left: 3px;
-      width: 22px; height: 22px;
-      border-radius: 50%;
-      background: color-mix(in srgb, var(--text) 90%, transparent);
-      transition: .15s left, .15s background;
-    }
-    .switch.on{
-      background: color-mix(in srgb, var(--accent2) 18%, transparent);
-      border-color: color-mix(in srgb, var(--accent2) 55%, transparent);
-    }
-    .switch.on::after{ left: 23px; background: color-mix(in srgb, var(--accent2) 95%, transparent) }
-
     /* Theme picker */
     .themeRow{
       display:flex;
@@ -579,10 +510,7 @@
 
     /* Pages */
     .page{ display:none; }
-    .page.active{ 
-    display:block;
-    padding-bottom: 140px; 
-    }
+    .page.active{ display:block; }
 
     /* Stats cards */
     .statsGrid{
@@ -612,7 +540,6 @@
       <div class="dot"></div>
       <div>Tjenestetimer</div>
     </div>
-    <!-- Removed top buttons (now only bottom nav) -->
     <div style="width:44px; height:1px" aria-hidden="true"></div>
   </div>
 </header>
@@ -628,8 +555,8 @@
           <div class="sub" id="dateLabel"></div>
         </div>
         <div class="row">
-          <button class="btn" id="btnPrevDay">◀</button>
-          <button class="btn" id="btnNextDay">▶</button>
+          <button class="btn" id="btnPrevDay" type="button">◀</button>
+          <button class="btn" id="btnNextDay" type="button">▶</button>
         </div>
       </div>
 
@@ -663,8 +590,8 @@
 
         <div class="row" style="margin-top:12px; justify-content:space-between">
           <div class="row">
-            <button class="btn primary" id="btnSave">Gem</button>
-            <button class="btn" id="btnClear">Ryd dagen</button>
+            <button class="btn primary" id="btnSave" type="button">Gem</button>
+            <button class="btn" id="btnClear" type="button">Ryd dagen</button>
           </div>
           <div class="pill" id="dayStatus">—</div>
         </div>
@@ -685,8 +612,8 @@
           <div class="sub" id="monthSubtitle"></div>
         </div>
         <div class="row">
-          <button class="btn" id="btnPrevMonth">◀</button>
-          <button class="btn" id="btnNextMonth">▶</button>
+          <button class="btn" id="btnPrevMonth" type="button">◀</button>
+          <button class="btn" id="btnNextMonth" type="button">▶</button>
         </div>
       </div>
 
@@ -729,8 +656,8 @@
               <textarea id="monthNote" placeholder="Note til denne måned…"></textarea>
             </div>
             <div class="row" style="margin-top:10px">
-              <button class="btn" id="btnSaveMonthNote">Gem måneds-note</button>
-              <button class="btn" id="btnClearMonthNote">Ryd note</button>
+              <button class="btn" id="btnSaveMonthNote" type="button">Gem måneds-note</button>
+              <button class="btn" id="btnClearMonthNote" type="button">Ryd note</button>
             </div>
           </div>
 
@@ -782,8 +709,8 @@
 
           <div class="row" style="margin-top:12px; justify-content:space-between">
             <div class="row">
-              <button class="btn primary" id="btnSavePlan">Gem plan</button>
-              <button class="btn" id="btnClearPlan">Ryd plan</button>
+              <button class="btn primary" id="btnSavePlan" type="button">Gem plan</button>
+              <button class="btn" id="btnClearPlan" type="button">Ryd plan</button>
             </div>
             <div class="pill" id="planStatus">—</div>
           </div>
@@ -791,22 +718,21 @@
 
         <div class="hr"></div>
 
-        <!-- Report controls (no visible "Månedsrapport" textarea anymore) -->
         <div class="row" style="justify-content:space-between; align-items:center">
           <div class="hint">Rapport-teksten genereres automatisk ved Kopiér / SMS / Mail.</div>
-          <button class="btn" id="btnCopyReport">Kopiér rapport</button>
+          <button class="btn" id="btnCopyReport" type="button">Kopiér rapport</button>
         </div>
 
         <div class="row" style="margin-top:10px">
-          <button class="btn primary" id="btnSMS">Åbn SMS</button>
-          <button class="btn primary" id="btnMail">Åbn Mail</button>
+          <button class="btn primary" id="btnSMS" type="button">Åbn SMS</button>
+          <button class="btn primary" id="btnMail" type="button">Åbn Mail</button>
         </div>
 
       </div>
     </section>
   </section>
 
-  <!-- PAGE: STATISTIK (year + all-time in ONE place) -->
+  <!-- PAGE: STATS -->
   <section class="page" id="pageStats">
     <section class="card">
       <div class="hd">
@@ -815,8 +741,8 @@
           <div class="sub">År + total (alle år)</div>
         </div>
         <div class="row">
-          <button class="btn" id="btnPrevYear">◀</button>
-          <button class="btn" id="btnNextYear">▶</button>
+          <button class="btn" id="btnPrevYear" type="button">◀</button>
+          <button class="btn" id="btnNextYear" type="button">▶</button>
         </div>
       </div>
 
@@ -891,94 +817,98 @@
     </section>
   </section>
 
+  <!-- PAGE: SETTINGS -->
+  <section class="page" id="pageSettings">
+    <section class="card">
+      <div class="hd">
+        <div>
+          <div class="title">Indstillinger</div>
+          <div class="sub">Lokal lagring · offline</div>
+        </div>
+      </div>
+
+      <div class="bd">
+        <div class="field">
+          <label>Navn</label>
+          <input id="setName" type="text" placeholder="fx William" />
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="grid">
+          <div class="field">
+            <label>Mål (timer)</label>
+            <input id="setGoalHours" type="number" min="0" step="0.25" placeholder="fx 50" />
+          </div>
+          <div class="field">
+            <label>Periode</label>
+            <select id="setGoalUnit">
+              <option value="week">Uge</option>
+              <option value="month" selected>Måned</option>
+              <option value="year">År</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="row" style="gap:12px; justify-content:space-between; align-items:center">
+          <div>
+            <div style="font-weight:650">Vis Betel</div>
+            <div class="hint">Slå fra hvis I aldrig bruger Betel-feltet.</div>
+          </div>
+          <div class="switch" id="setShowBethel" role="switch" aria-label="Vis Betel"></div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="row" style="gap:12px; justify-content:space-between; align-items:center">
+          <div>
+            <div style="font-weight:650">Vis planlagte timer</div>
+            <div class="hint">Vis planlægger i Måned-fanen.</div>
+          </div>
+          <div class="switch" id="setShowPlanned" role="switch" aria-label="Vis planlagte timer"></div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="grid">
+          <div class="field">
+            <label>SMS-nummer</label>
+            <input id="setSMS" type="tel" placeholder="fx +45xxxxxxxx" />
+          </div>
+          <div class="field">
+            <label>Email</label>
+            <input id="setEmail" type="email" placeholder="fx ældste@example.com" />
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="field">
+          <label>Tema</label>
+          <div class="themeRow" id="themeRow">
+            <div class="themeSwatch sw-light" data-theme="Lys" title="Lys"></div>
+            <div class="themeSwatch sw-dark" data-theme="dark" title="Mørk"></div>
+            <div class="themeSwatch sw-red" data-theme="Red" title="Rød"></div>
+            <div class="themeSwatch sw-purple" data-theme="Purple" title="Lilla"></div>
+            <div class="themeSwatch sw-green" data-theme="Green" title="Grøn"></div>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="row" style="margin-top:12px; justify-content:space-between">
+          <button class="btn primary" id="btnSaveSettings" type="button">Gem indstillinger</button>
+          <button class="btn" id="btnResetTimes" type="button">Nulstil al tid</button>
+          <button class="btn" id="btnResetAll" type="button">Nulstil alt</button>
+        </div>
+      </div>
+    </section>
+  </section>
+
 </div>
 
-<!-- PAGE: SETTINGS -->
-<section class="page" id="pageSettings">
-  <section class="card">  <div class="hd">
-    <div>
-      <div class="title">Indstillinger</div>
-      <div class="sub">Lokal lagring · offline</div>
-    </div>
-  </div>
-
-  <div class="bd">
-    <div class="field">
-      <label>Navn</label>
-      <input id="setName" type="text" placeholder="fx William" />
-    </div>
-
-    <div class="hr"></div>
-
-    <div class="grid">
-      <div class="field">
-        <label>Mål (timer)</label>
-        <input id="setGoalHours" type="number" min="0" step="0.25" placeholder="fx 50" />
-      </div>
-      <div class="field">
-        <label>Periode</label>
-        <select id="setGoalUnit">
-          <option value="week">Uge</option>
-          <option value="month" selected>Måned</option>
-          <option value="year">År</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="hr"></div>
-
-    <div class="toggle">
-      <div>
-        <div style="font-weight:650">Vis Betel</div>
-        <small>Slå fra hvis I aldrig bruger Betel-feltet.</small>
-      </div>
-      <div class="switch" id="setShowBethel"></div>
-    </div>
-
-    <div class="toggle">
-      <div>
-        <div style="font-weight:650">Vis planlagte timer</div>
-        <small>Vis planlægger i Måned-fanen.</small>
-      </div>
-      <div class="switch" id="setShowPlanned"></div>
-    </div>
-
-    <div class="hr"></div>
-
-    <div class="grid">
-      <div class="field">
-        <label>SMS-nummer</label>
-        <input id="setSMS" type="tel" placeholder="fx +45xxxxxxxx" />
-      </div>
-      <div class="field">
-        <label>Email</label>
-        <input id="setEmail" type="email" placeholder="fx ældste@example.com" />
-      </div>
-    </div>
-
-    <div class="hr"></div>
-
-    <div class="field">
-      <label>Tema</label>
-      <div class="themeRow" id="themeRow">
-        <div class="themeSwatch sw-light" data-theme="Lys" title="Lys"></div>
-        <div class="themeSwatch sw-dark" data-theme="dark" title="Mørk"></div>
-        <div class="themeSwatch sw-red" data-theme="Red" title="Rød"></div>
-        <div class="themeSwatch sw-purple" data-theme="Purple" title="Lilla"></div>
-        <div class="themeSwatch sw-green" data-theme="Green" title="Grøn"></div>
-      </div>
-    </div>
-
-    <div class="hr"></div>
-
-    <div class="row" style="margin-top:12px; justify-content:space-between">
-      <button class="btn primary" id="btnSaveSettings">Gem indstillinger</button>
-      <button class="btn" id="btnResetTimes">Nulstil al tid</button>
-      <button class="btn" id="btnResetAll">Nulstil alt</button>
-    </div>
-  </div>
-  </section>
-</section>
 <!-- Bottom nav -->
 <nav class="bottomNav" aria-label="Navigation">
   <div class="bottomNavInner">
@@ -1009,7 +939,7 @@
     <div class="msg" id="toastMsg">—</div>
     <div class="small" id="toastSmall"></div>
   </div>
-  <button class="btn" id="toastBtn" style="display:none">OK</button>
+  <button class="btn" id="toastBtn" style="display:none" type="button">OK</button>
 </div>
 
 <script>
@@ -1198,6 +1128,7 @@ const ui = {
   pageToday: $("#pageToday"),
   pageMonth: $("#pageMonth"),
   pageStats: $("#pageStats"),
+  pageSettings: $("#pageSettings"),
 
   // today
   dateLabel: $("#dateLabel"),
@@ -1247,8 +1178,7 @@ const ui = {
   allDays: $("#allDays"),
   allYearsText: $("#allYearsText"),
 
-  // drawer/settings
-
+  // settings
   setName: $("#setName"),
   setGoalHours: $("#setGoalHours"),
   setGoalUnit: $("#setGoalUnit"),
@@ -1259,11 +1189,14 @@ const ui = {
   themeRow: $("#themeRow")
 };
 
-
+// Safe: drawer/backdrop not used in this version, but keep function so resets never crash.
 function closeDrawer(){
-  ui.backdrop.classList.remove("show");
-  ui.drawer.classList.remove("open");
+  const backdrop = document.querySelector(".backdrop");
+  const drawer = document.querySelector(".drawer");
+  if(backdrop) backdrop.classList.remove("show");
+  if(drawer) drawer.classList.remove("open");
 }
+
 function switchSet(el, on){
   el.classList.toggle("on", !!on);
   el.dataset.on = on ? "1" : "0";
@@ -1331,12 +1264,6 @@ function planHasAnyData(p){
   if(!p) return false;
   const mins = (p.plannedServiceMin||0) + (p.plannedBethelMin||0);
   return mins > 0;
-}
-
-function totalMinutesForEntry(e){
-  const s = state.settings;
-  if(!e) return 0;
-  return (e.serviceMin||0) + (s.showBethel ? (e.bethelMin||0) : 0);
 }
 
 function updateDayHeader(iso){
@@ -1777,7 +1704,6 @@ function refreshStatsPanel(){
 function refreshAll(){
   applySettingsToUI();
   loadEntryToForm(currentDate);
-  // keep plan selected date inside displayed month when possible
   if(!planSelectedDate) planSelectedDate = currentDate;
 
   refreshMonthPanel();
@@ -1795,7 +1721,7 @@ function setActiveTab(tab){
   if(tab === "today") ui.pageToday.classList.add("active");
   if(tab === "month") ui.pageMonth.classList.add("active");
   if(tab === "stats") ui.pageStats.classList.add("active");
-  if(tab === "settings") $("#pageSettings").classList.add("active");
+  if(tab === "settings") ui.pageSettings.classList.add("active");
 }
 
 function navigate(tab){
@@ -1839,7 +1765,6 @@ function copyText(text){
  *  Events
  *  ---------------- */
 
-
 document.querySelectorAll(".navItem").forEach(it => {
   it.addEventListener("click", ()=> navigate(it.dataset.tab));
 });
@@ -1869,7 +1794,6 @@ $("#btnPrevMonth").addEventListener("click", ()=> {
   d.setMonth(d.getMonth() - 1);
   currentMonthAnchor = `${d.getFullYear()}-${pad2(d.getMonth()+1)}-01`;
 
-  // keep planSelectedDate inside month (set to 1st)
   planSelectedDate = currentMonthAnchor;
   yearAnchor = String(d.getFullYear());
 
@@ -1985,9 +1909,9 @@ $("#btnSaveSettings").addEventListener("click", ()=> {
   state.settings.smsNumber = (ui.setSMS.value || "").trim();
   state.settings.emailTo = (ui.setEmail.value || "").trim();
 
-saveState();
-toast("Indstillinger gemt");
-refreshAll();
+  saveState();
+  toast("Indstillinger gemt");
+  refreshAll();
 });
 
 $("#btnResetAll").addEventListener("click", ()=> {
