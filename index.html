@@ -218,9 +218,9 @@
     .btn.ghost{ background: transparent; }
 
     .container{
-      max-width: 1100px;
-      margin: 18px auto;
-      padding: 0 16px calc(96px + env(safe-area-inset-bottom));
+    max-width: 1100px;
+    margin: 18px auto;
+    padding: 0 16px calc(140px + env(safe-area-inset-bottom));
     }
 
     .card{
@@ -579,7 +579,10 @@
 
     /* Pages */
     .page{ display:none; }
-    .page.active{ display:block; }
+    .page.active{ 
+    display:block;
+    padding-bottom: 140px; 
+    }
 
     /* Stats cards */
     .statsGrid{
@@ -890,15 +893,13 @@
 
 </div>
 
-<!-- Drawer (Settings) -->
-<div class="backdrop" id="backdrop"></div>
-<aside class="drawer" id="drawer">
-  <div class="hd">
+<!-- PAGE: SETTINGS -->
+<section class="page" id="pageSettings">
+  <section class="card">  <div class="hd">
     <div>
       <div class="title">Indstillinger</div>
       <div class="sub">Lokal lagring · offline</div>
     </div>
-    <button class="btn" id="btnClose">Luk</button>
   </div>
 
   <div class="bd">
@@ -976,8 +977,8 @@
       <button class="btn" id="btnResetAll">Nulstil alt</button>
     </div>
   </div>
-</aside>
-
+  </section>
+</section>
 <!-- Bottom nav -->
 <nav class="bottomNav" aria-label="Navigation">
   <div class="bottomNavInner">
@@ -1247,8 +1248,7 @@ const ui = {
   allYearsText: $("#allYearsText"),
 
   // drawer/settings
-  drawer: $("#drawer"),
-  backdrop: $("#backdrop"),
+
   setName: $("#setName"),
   setGoalHours: $("#setGoalHours"),
   setGoalUnit: $("#setGoalUnit"),
@@ -1259,10 +1259,7 @@ const ui = {
   themeRow: $("#themeRow")
 };
 
-function openDrawer(){
-  ui.backdrop.classList.add("show");
-  ui.drawer.classList.add("open");
-}
+
 function closeDrawer(){
   ui.backdrop.classList.remove("show");
   ui.drawer.classList.remove("open");
@@ -1798,15 +1795,11 @@ function setActiveTab(tab){
   if(tab === "today") ui.pageToday.classList.add("active");
   if(tab === "month") ui.pageMonth.classList.add("active");
   if(tab === "stats") ui.pageStats.classList.add("active");
+  if(tab === "settings") $("#pageSettings").classList.add("active");
 }
 
 function navigate(tab){
-  if(tab === "settings"){
-    openDrawer();
-    return;
-  }
   setActiveTab(tab);
-  closeDrawer();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -1845,8 +1838,7 @@ function copyText(text){
 /** ----------------
  *  Events
  *  ---------------- */
-$("#btnClose").addEventListener("click", closeDrawer);
-ui.backdrop.addEventListener("click", closeDrawer);
+
 
 document.querySelectorAll(".navItem").forEach(it => {
   it.addEventListener("click", ()=> navigate(it.dataset.tab));
@@ -1993,10 +1985,9 @@ $("#btnSaveSettings").addEventListener("click", ()=> {
   state.settings.smsNumber = (ui.setSMS.value || "").trim();
   state.settings.emailTo = (ui.setEmail.value || "").trim();
 
-  saveState();
-  toast("Indstillinger gemt");
-  closeDrawer();
-  refreshAll();
+saveState();
+toast("Indstillinger gemt");
+refreshAll();
 });
 
 $("#btnResetAll").addEventListener("click", ()=> {
