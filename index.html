@@ -1,1 +1,2039 @@
+<!doctype html>
+<html lang="da" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#111827" />
+  <title>Tjenestetimer</title>
 
+  <style>
+    /* -------------------------
+       THEME TOKENS (default: dark)
+       ------------------------- */
+    :root{
+      --bg:#0b1220;
+      --bg2:#0a1020;
+
+      --card:#111827;
+      --card2:#0f172a;
+
+      --text:#e5e7eb;
+      --muted:#9ca3af;
+      --line:#1f2937;
+
+      --accent:#60a5fa;
+      --accent2:#34d399;
+
+      --ok:#34d399;
+      --warn:#fbbf24;
+      --danger:#f87171;
+
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+
+      --headerBg: rgba(11,18,32,.72);
+      --panelBg1: rgba(17,24,39,.82);
+      --panelBg2: rgba(15,23,42,.82);
+
+      --inputBg: rgba(2,6,23,.25);
+      --btnBg: rgba(17,24,39,.75);
+      --btnBgHover: rgba(17,24,39,.95);
+
+      --calBg: rgba(2,6,23,.18);
+      --cellBg: rgba(17,24,39,.45);
+      --cellBgHover: rgba(17,24,39,.80);
+
+      --navBg: rgba(11,18,32,.70);
+      --navBorder: rgba(31,41,55,.75);
+      --navActiveBg: rgba(96,165,250,.18);
+    }
+
+    /* Light */
+    html[data-theme="light"], html[data-theme="Lys"]{
+      --bg:#f3f4f6;
+      --bg2:#ffffff;
+
+      --card:#ffffff;
+      --card2:#f9fafb;
+
+      --text:#111827;
+      --muted:#6b7280;
+      --line:#e5e7eb;
+
+      --accent:#2563eb;
+      --accent2:#10b981;
+
+      --ok:#10b981;
+      --warn:#f59e0b;
+      --danger:#ef4444;
+
+      --shadow: 0 10px 30px rgba(0,0,0,.10);
+
+      --headerBg: rgba(255,255,255,.75);
+      --panelBg1: rgba(255,255,255,.92);
+      --panelBg2: rgba(249,250,251,.92);
+
+      --inputBg: rgba(255,255,255,.85);
+      --btnBg: rgba(255,255,255,.88);
+      --btnBgHover: rgba(255,255,255,.96);
+
+      --calBg: rgba(255,255,255,.85);
+      --cellBg: rgba(255,255,255,.90);
+      --cellBgHover: rgba(255,255,255,.98);
+
+      --navBg: rgba(255,255,255,.86);
+      --navBorder: rgba(229,231,235,.95);
+      --navActiveBg: rgba(37,99,235,.12);
+    }
+
+    /* Dark Red */
+    html[data-theme="Red"]{
+      --bg:#1a0b10;
+      --bg2:#16080d;
+
+      --accent:#fb7185;
+      --accent2:#fbbf24;
+
+      --headerBg: rgba(26,11,16,.72);
+
+      --panelBg1: rgba(33,14,20,.86);
+      --panelBg2: rgba(21,10,14,.86);
+
+      --inputBg: rgba(14,6,8,.28);
+      --btnBg: rgba(33,14,20,.72);
+      --btnBgHover: rgba(33,14,20,.92);
+
+      --calBg: rgba(14,6,8,.22);
+      --cellBg: rgba(33,14,20,.46);
+      --cellBgHover: rgba(33,14,20,.82);
+
+      --navBg: rgba(26,11,16,.72);
+      --navActiveBg: rgba(251,113,133,.14);
+    }
+
+    /* Dark Purple */
+    html[data-theme="Purple"], html[data-theme="Lilla"]{
+      --bg:#120b22;
+      --bg2:#0f081d;
+
+      --accent:#a78bfa;
+      --accent2:#34d399;
+
+      --headerBg: rgba(18,11,34,.72);
+
+      --panelBg1: rgba(24,15,44,.86);
+      --panelBg2: rgba(15,10,29,.86);
+
+      --inputBg: rgba(10,7,18,.30);
+      --btnBg: rgba(24,15,44,.72);
+      --btnBgHover: rgba(24,15,44,.92);
+
+      --calBg: rgba(10,7,18,.22);
+      --cellBg: rgba(24,15,44,.46);
+      --cellBgHover: rgba(24,15,44,.82);
+
+      --navBg: rgba(18,11,34,.72);
+      --navActiveBg: rgba(167,139,250,.14);
+    }
+
+    /* Dark Green */
+    html[data-theme="Green"], html[data-theme="Grøn"]{
+      --bg:#061a14;
+      --bg2:#051510;
+
+      --accent:#34d399;
+      --accent2:#60a5fa;
+
+      --headerBg: rgba(6,26,20,.72);
+
+      --panelBg1: rgba(10,34,26,.86);
+      --panelBg2: rgba(6,21,16,.86);
+
+      --inputBg: rgba(4,14,11,.28);
+      --btnBg: rgba(10,34,26,.72);
+      --btnBgHover: rgba(10,34,26,.92);
+
+      --calBg: rgba(4,14,11,.22);
+      --cellBg: rgba(10,34,26,.46);
+      --cellBgHover: rgba(10,34,26,.82);
+
+      --navBg: rgba(6,26,20,.72);
+      --navActiveBg: rgba(52,211,153,.14);
+    }
+
+    /* -------------------------
+       BASE UI
+       ------------------------- */
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:
+        radial-gradient(1200px 800px at 20% -10%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 55%),
+        radial-gradient(900px 600px at 90% 10%, color-mix(in srgb, var(--accent2) 12%, transparent), transparent 55%),
+        var(--bg);
+      color:var(--text);
+      min-height:100vh;
+    }
+
+    header{
+      position:sticky; top:0; z-index:10;
+      background: var(--headerBg);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+    }
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 16px;
+      max-width: 1100px; margin:0 auto;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      font-weight:700; letter-spacing:.2px;
+    }
+    .brand .dot{
+      width:12px; height:12px; border-radius:50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent);
+    }
+
+    button, input, select, textarea{ font: inherit; color: var(--text); }
+
+    .btn{
+      border: 1px solid color-mix(in srgb, var(--line) 90%, transparent);
+      background: var(--btnBg);
+      padding:10px 12px;
+      border-radius: 12px;
+      cursor:pointer;
+      transition: .15s transform, .15s background, .15s border-color;
+      user-select:none;
+    }
+    .btn:hover{ background: var(--btnBgHover); border-color: color-mix(in srgb, var(--accent) 35%, var(--line)); }
+    .btn:active{ transform: translateY(1px) }
+    .btn.primary{
+      background: color-mix(in srgb, var(--accent) 18%, transparent);
+      border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+    }
+    .btn.primary:hover{ background: color-mix(in srgb, var(--accent) 26%, transparent); }
+    .btn.ghost{ background: transparent; }
+
+    .container{
+      max-width: 1100px;
+      margin: 18px auto;
+      padding: 0 16px calc(96px + env(safe-area-inset-bottom));
+    }
+
+    .card{
+      background: linear-gradient(180deg, var(--panelBg1), var(--panelBg2));
+      border: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .card .hd{
+      padding: 14px 16px;
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .title{font-weight:700}
+    .sub{color:var(--muted); font-size: 13px; margin-top:2px}
+    .card .bd{ padding: 14px 16px; }
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 10px;
+    }
+    @media (max-width: 520px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    .field label{
+      display:block;
+      color: var(--muted);
+      font-size: 12px;
+      margin: 0 0 6px 2px;
+    }
+    .field input, .field select, .field textarea{
+      width:100%;
+      border-radius: 12px;
+      border: 1px solid color-mix(in srgb, var(--line) 90%, transparent);
+      background: var(--inputBg);
+      padding: 10px 11px;
+      outline: none;
+    }
+    .field textarea{ min-height: 90px; resize: vertical; }
+
+    .row{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+      background: color-mix(in srgb, var(--inputBg) 100%, transparent);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .meter{
+      height: 10px;
+      background: color-mix(in srgb, var(--line) 70%, transparent);
+      border-radius: 999px;
+      overflow:hidden;
+      border: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+    }
+    .meter > div{
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--accent) 95%, transparent),
+        color-mix(in srgb, var(--accent2) 95%, transparent)
+      );
+    }
+
+    .hint{color: var(--muted); font-size: 12px; line-height: 1.35}
+    .hr{height:1px; background: color-mix(in srgb, var(--line) 70%, transparent); margin: 14px 0}
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+
+    /* Calendar */
+    .cal{
+      margin-top: 10px;
+      border: 1px solid color-mix(in srgb, var(--line) 75%, transparent);
+      background: var(--calBg);
+      border-radius: 16px;
+      padding: 10px;
+    }
+    .calHead{
+      display:grid;
+      grid-template-columns: repeat(7, minmax(0,1fr));
+      gap: 6px;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      text-align:center;
+    }
+    .calGrid{
+      display:grid;
+      grid-template-columns: repeat(7, minmax(0,1fr));
+      gap: 6px;
+    }
+    .dayCell{
+      position: relative;
+      padding: 10px 0;
+      border-radius: 14px;
+      border: 1px solid color-mix(in srgb, var(--line) 65%, transparent);
+      background: var(--cellBg);
+      text-align:center;
+      cursor:pointer;
+      user-select:none;
+      transition: .12s transform, .12s border-color, .12s background;
+    }
+    .dayCell:hover{
+      background: var(--cellBgHover);
+      border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
+    }
+    .dayCell:active{ transform: translateY(1px); }
+    .dayCell.muted{
+      opacity: .45;
+      cursor: default;
+    }
+    .dayCell.today{
+      border-color: color-mix(in srgb, var(--accent) 60%, transparent);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 12%, transparent) inset;
+    }
+    .dayCell.selected{
+      border-color: color-mix(in srgb, var(--accent2) 65%, transparent);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent2) 12%, transparent) inset;
+    }
+    .dayCell.logged{
+      border-color: color-mix(in srgb, var(--ok) 38%, transparent);
+    }
+    .dayCell.planned{
+      border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+    }
+    .dot{
+      position:absolute;
+      left: 50%;
+      bottom: 7px;
+      transform: translateX(-50%);
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      display:none;
+    }
+    .dayCell.logged .dot{ display:block; background: color-mix(in srgb, var(--ok) 95%, transparent); }
+    .dayCell.planned .dot{ display:block; background: color-mix(in srgb, var(--accent) 95%, transparent); }
+
+    /* Drawer */
+    .backdrop{
+      position: fixed; inset:0;
+      background: rgba(0,0,0,.45);
+      display:none;
+      z-index: 50;
+    }
+    .drawer{
+      position: fixed; top:0; right:0;
+      width: min(420px, 92vw);
+      height: 100dvh;
+      background: linear-gradient(180deg, color-mix(in srgb, var(--card) 96%, transparent), color-mix(in srgb, var(--card2) 96%, transparent));
+      border-left: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+      box-shadow: -20px 0 50px rgba(0,0,0,.35);
+      transform: translateX(105%);
+      transition: .2s transform;
+      z-index: 60;
+      display:flex;
+      flex-direction:column;
+    }
+    .drawer.open{ transform: translateX(0) }
+    .backdrop.show{ display:block }
+    .drawer .hd{
+      padding: 14px 16px;
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .drawer .bd{
+    padding: 14px 16px;
+    overflow:auto;
+    padding-bottom: calc(24px + env(safe-area-inset-bottom));
+    }
+    .toggle{
+      display:flex; align-items:center; justify-content:space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid color-mix(in srgb, var(--line) 75%, transparent);
+      background: color-mix(in srgb, var(--inputBg) 85%, transparent);
+      margin-bottom: 10px;
+    }
+    .toggle small{ color: var(--muted); display:block; margin-top:2px }
+    .switch{
+      width: 48px; height: 28px;
+      border-radius: 999px;
+      border: 1px solid color-mix(in srgb, var(--line) 90%, transparent);
+      background: color-mix(in srgb, var(--inputBg) 100%, transparent);
+      position: relative;
+      cursor:pointer;
+      flex: 0 0 auto;
+    }
+    .switch::after{
+      content:"";
+      position:absolute;
+      top: 3px; left: 3px;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: color-mix(in srgb, var(--text) 90%, transparent);
+      transition: .15s left, .15s background;
+    }
+    .switch.on{
+      background: color-mix(in srgb, var(--accent2) 18%, transparent);
+      border-color: color-mix(in srgb, var(--accent2) 55%, transparent);
+    }
+    .switch.on::after{ left: 23px; background: color-mix(in srgb, var(--accent2) 95%, transparent) }
+
+    /* Theme picker */
+    .themeRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top: 8px;
+    }
+    .themeSwatch{
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 2px solid color-mix(in srgb, var(--line) 75%, transparent);
+      cursor:pointer;
+      position: relative;
+      box-shadow: 0 8px 18px rgba(0,0,0,.18);
+    }
+    .themeSwatch.active{
+      border-color: color-mix(in srgb, var(--accent) 70%, transparent);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent), 0 8px 18px rgba(0,0,0,.18);
+    }
+    .themeSwatch::after{
+      content:"";
+      position:absolute;
+      inset: 5px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+    }
+    .sw-dark{ background: radial-gradient(circle at 30% 25%, #60a5fa55, transparent 55%), #0b1220; }
+    .sw-light{ background: radial-gradient(circle at 30% 25%, #2563eb33, transparent 55%), #f3f4f6; }
+    .sw-red{ background: radial-gradient(circle at 30% 25%, #fb718566, transparent 55%), #1a0b10; }
+    .sw-purple{ background: radial-gradient(circle at 30% 25%, #a78bfa66, transparent 55%), #120b22; }
+    .sw-green{ background: radial-gradient(circle at 30% 25%, #34d39966, transparent 55%), #061a14; }
+
+    /* Toast */
+    .toast{
+      position: fixed;
+      left: 50%;
+      bottom: calc(78px + env(safe-area-inset-bottom));
+      transform: translateX(-50%);
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+      background: color-mix(in srgb, var(--card) 92%, transparent);
+      box-shadow: var(--shadow);
+      color: var(--text);
+      display:none;
+      z-index: 120;
+      max-width: min(820px, 92vw);
+      font-size: 14px;
+    }
+    .toast.show{ display:flex; align-items:center; gap:10px; justify-content:space-between; }
+    .toast .small{ color: var(--muted); font-size: 12px; }
+
+    /* -------------------------
+       Bottom navigation
+       ------------------------- */
+    .bottomNav{
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+      background: var(--navBg);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--navBorder);
+      z-index: 90;
+    }
+    .bottomNavInner{
+      max-width: 1100px;
+      margin: 0 auto;
+      display:flex;
+      justify-content:space-between;
+      gap: 8px;
+      align-items:flex-end;
+    }
+    .navItem{
+      flex: 1 1 0;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap: 6px;
+      color: var(--muted);
+      text-decoration:none;
+      cursor:pointer;
+      user-select:none;
+      padding: 6px 4px;
+      border-radius: 14px;
+      transition: .12s background, .12s transform;
+    }
+    .navItem:hover{ background: color-mix(in srgb, var(--inputBg) 70%, transparent); }
+    .navItem:active{ transform: translateY(1px); }
+    .navIcon{
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      border: 1px solid color-mix(in srgb, var(--line) 75%, transparent);
+      background: color-mix(in srgb, var(--inputBg) 100%, transparent);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow: 0 10px 22px rgba(0,0,0,.22);
+      position: relative;
+      overflow:hidden;
+    }
+    .navIcon::before{
+      content:"";
+      position:absolute;
+      inset:-18px;
+      background: radial-gradient(circle at 30% 25%, color-mix(in srgb, var(--accent) 28%, transparent), transparent 55%);
+      opacity:.9;
+      pointer-events:none;
+    }
+    .navGlyph{
+      position: relative;
+      z-index: 1;
+      font-weight: 800;
+      letter-spacing: .2px;
+      color: color-mix(in srgb, var(--text) 92%, transparent);
+      font-size: 14px;
+    }
+    .navLabel{
+      font-size: 11px;
+      line-height: 1;
+    }
+    .navItem.active{
+      color: var(--text);
+    }
+    .navItem.active .navIcon{
+      border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+      background: var(--navActiveBg);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 14%, transparent), 0 10px 22px rgba(0,0,0,.22);
+    }
+
+    /* Pages */
+    .page{ display:none; }
+    .page.active{ display:block; }
+
+    /* Stats cards */
+    .statsGrid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 10px;
+    }
+    @media (max-width: 520px){
+      .statsGrid{ grid-template-columns: 1fr; }
+    }
+    .statCard{
+      border: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+      background: color-mix(in srgb, var(--inputBg) 90%, transparent);
+      border-radius: 16px;
+      padding: 12px;
+    }
+    .statCard .k{ color: var(--muted); font-size: 12px; }
+    .statCard .v{ font-size: 20px; font-weight: 800; margin-top: 6px; }
+    .statCard .s{ color: var(--muted); font-size: 12px; margin-top: 6px; line-height: 1.35; }
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="topbar">
+    <div class="brand">
+      <div class="dot"></div>
+      <div>Tjenestetimer</div>
+    </div>
+    <!-- Removed top buttons (now only bottom nav) -->
+    <div style="width:44px; height:1px" aria-hidden="true"></div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- PAGE: TODAY -->
+  <section class="page active" id="pageToday">
+    <section class="card">
+      <div class="hd">
+        <div>
+          <div class="title">I dag</div>
+          <div class="sub" id="dateLabel"></div>
+        </div>
+        <div class="row">
+          <button class="btn" id="btnPrevDay">◀</button>
+          <button class="btn" id="btnNextDay">▶</button>
+        </div>
+      </div>
+
+      <div class="bd">
+        <div class="grid">
+          <div class="field">
+            <label>Dag</label>
+            <div class="row" style="justify-content:space-between">
+              <div class="pill" id="dayDisplay" style="flex:1; min-width: 180px; justify-content:center">—</div>
+              <button class="btn" id="btnGotoToday" type="button">I dag</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Bibelstudier</label>
+            <input id="bibleStudies" type="number" min="0" step="1" placeholder="0" />
+          </div>
+
+          <div class="field">
+            <label>Tjeneste</label>
+            <input id="serviceTime" type="text" placeholder="fx 1:30 eller 2:00" />
+          </div>
+
+          <div class="field" id="bethelFieldWrap">
+            <label>Betel</label>
+            <input id="bethelTime" type="text" placeholder="fx 0:45" />
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="row" style="margin-top:12px; justify-content:space-between">
+          <div class="row">
+            <button class="btn primary" id="btnSave">Gem</button>
+            <button class="btn" id="btnClear">Ryd dagen</button>
+          </div>
+          <div class="pill" id="dayStatus">—</div>
+        </div>
+
+        <div class="hint" style="margin-top:12px">
+          (Planlagte timer styres i <b>Måned</b>-fanen.)
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <!-- PAGE: MONTH -->
+  <section class="page" id="pageMonth">
+    <section class="card">
+      <div class="hd">
+        <div>
+          <div class="title">Måned</div>
+          <div class="sub" id="monthSubtitle"></div>
+        </div>
+        <div class="row">
+          <button class="btn" id="btnPrevMonth">◀</button>
+          <button class="btn" id="btnNextMonth">▶</button>
+        </div>
+      </div>
+
+      <div class="bd">
+        <div class="row" style="justify-content:space-between">
+          <div class="pill">Tjeneste: <span id="sumService">0:00</span></div>
+          <div class="pill" id="sumBethelWrap">Betel: <span id="sumBethel">0:00</span></div>
+        </div>
+
+        <div class="row" style="margin-top:10px; justify-content:space-between">
+          <div class="pill">Bibelstudier: <span id="sumStudies">0</span></div>
+          <div class="pill">Dage logget: <span id="sumDays">0</span></div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div>
+          <div class="row" style="justify-content:space-between; margin-bottom:8px">
+            <div class="pill">Mål: <span id="goalText">—</span></div>
+            <div class="pill">Progress: <span id="progressText">0%</span></div>
+          </div>
+          <div class="meter"><div id="meterFill"></div></div>
+          <div class="hint" style="margin-top:8px" id="goalHint">—</div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="title" style="font-size:14px; margin-bottom:6px">Kalender</div>
+        <div class="cal">
+          <div class="calHead" id="calHead"></div>
+          <div class="calGrid" id="calGrid"></div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="row" style="justify-content:space-between; align-items:flex-start">
+          <div style="flex:1; min-width: 220px">
+            <div class="field">
+              <label>Måneds-note</label>
+              <textarea id="monthNote" placeholder="Note til denne måned…"></textarea>
+            </div>
+            <div class="row" style="margin-top:10px">
+              <button class="btn" id="btnSaveMonthNote">Gem måneds-note</button>
+              <button class="btn" id="btnClearMonthNote">Ryd note</button>
+            </div>
+          </div>
+
+          <div style="flex:1; min-width: 220px">
+            <div class="field">
+              <label>Plan (samlet for måneden)</label>
+
+              <div class="pill" style="width:100%; justify-content:space-between">
+                <span>Planlagt:</span>
+                <span><span id="sumPlanned">0:00</span></span>
+              </div>
+
+              <div class="pill" style="width:100%; justify-content:space-between; margin-top:8px">
+                <span>Mangler til mål:</span>
+                <span id="plannedRemaining">—</span>
+              </div>
+
+              <div class="hint" style="margin-top:8px">
+                Planlæg ved at vælge en dag i kalenderen og udfylde plan-felterne nedenfor.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <!-- Planner editor: ONLY in Month tab -->
+        <div id="plannerWrap">
+          <div class="title" style="font-size:14px; margin-bottom:6px">Planlagte timer (valgt dag)</div>
+
+          <div class="row" style="justify-content:space-between; margin-bottom:10px">
+            <div class="pill" id="planSelectedDay">—</div>
+            <div class="row">
+              <button class="btn" id="btnPlanGoToday" type="button">I dag</button>
+              <button class="btn" id="btnPlanOpenDay" type="button">Åbn dag</button>
+            </div>
+          </div>
+
+          <div class="grid" id="plannedWrapMonth">
+            <div class="field">
+              <label>Planlagt tjeneste</label>
+              <input id="plannedServiceTimeMonth" type="text" placeholder="fx 2:00" />
+            </div>
+            <div class="field" id="plannedBethelFieldWrapMonth">
+              <label>Planlagt Betel</label>
+              <input id="plannedBethelTimeMonth" type="text" placeholder="fx 1:00" />
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:12px; justify-content:space-between">
+            <div class="row">
+              <button class="btn primary" id="btnSavePlan">Gem plan</button>
+              <button class="btn" id="btnClearPlan">Ryd plan</button>
+            </div>
+            <div class="pill" id="planStatus">—</div>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <!-- Report controls (no visible "Månedsrapport" textarea anymore) -->
+        <div class="row" style="justify-content:space-between; align-items:center">
+          <div class="hint">Rapport-teksten genereres automatisk ved Kopiér / SMS / Mail.</div>
+          <button class="btn" id="btnCopyReport">Kopiér rapport</button>
+        </div>
+
+        <div class="row" style="margin-top:10px">
+          <button class="btn primary" id="btnSMS">Åbn SMS</button>
+          <button class="btn primary" id="btnMail">Åbn Mail</button>
+        </div>
+
+      </div>
+    </section>
+  </section>
+
+  <!-- PAGE: STATISTIK (year + all-time in ONE place) -->
+  <section class="page" id="pageStats">
+    <section class="card">
+      <div class="hd">
+        <div>
+          <div class="title">Statistik</div>
+          <div class="sub">År + total (alle år)</div>
+        </div>
+        <div class="row">
+          <button class="btn" id="btnPrevYear">◀</button>
+          <button class="btn" id="btnNextYear">▶</button>
+        </div>
+      </div>
+
+      <div class="bd">
+        <div class="row" style="justify-content:space-between; align-items:center">
+          <div class="pill">År: <span id="statsYearLabel">—</span></div>
+          <button class="btn" id="btnStatsGoCurrentYear" type="button">Nuværende år</button>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="title" style="font-size:14px; margin-bottom:6px">Dette år</div>
+        <div class="statsGrid">
+          <div class="statCard">
+            <div class="k">Tjeneste</div>
+            <div class="v" id="yearService">0:00</div>
+            <div class="s">Samlet for året.</div>
+          </div>
+          <div class="statCard" id="yearBethelCard">
+            <div class="k">Betel</div>
+            <div class="v" id="yearBethel">0:00</div>
+            <div class="s">Kun hvis Betel er slået til.</div>
+          </div>
+          <div class="statCard">
+            <div class="k">Bibelstudier</div>
+            <div class="v" id="yearStudies">0</div>
+            <div class="s">Samlet antal for året.</div>
+          </div>
+          <div class="statCard">
+            <div class="k">Dage logget</div>
+            <div class="v" id="yearDays">0</div>
+            <div class="s">Dage med noget logget (tid eller studier).</div>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="title" style="font-size:14px; margin-bottom:6px">Alt (alle år)</div>
+        <div class="statsGrid">
+          <div class="statCard">
+            <div class="k">Tjeneste (total)</div>
+            <div class="v" id="allService">0:00</div>
+            <div class="s">Samlet tjeneste fra alle logs.</div>
+          </div>
+
+          <div class="statCard" id="allBethelCard">
+            <div class="k">Betel (total)</div>
+            <div class="v" id="allBethel">0:00</div>
+            <div class="s">Samlet Betel fra alle logs.</div>
+          </div>
+
+          <div class="statCard">
+            <div class="k">Bibelstudier (total)</div>
+            <div class="v" id="allStudies">0</div>
+            <div class="s">Samlet antal på tværs af alle år.</div>
+          </div>
+
+          <div class="statCard">
+            <div class="k">Dage logget (total)</div>
+            <div class="v" id="allDays">0</div>
+            <div class="s">Dage med noget logget (tid eller studier).</div>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="title" style="font-size:14px; margin-bottom:6px">År (samlet)</div>
+        <div class="field">
+          <textarea id="allYearsText" class="mono" readonly style="min-height: 220px"></textarea>
+        </div>
+      </div>
+    </section>
+  </section>
+
+</div>
+
+<!-- Drawer (Settings) -->
+<div class="backdrop" id="backdrop"></div>
+<aside class="drawer" id="drawer">
+  <div class="hd">
+    <div>
+      <div class="title">Indstillinger</div>
+      <div class="sub">Lokal lagring · offline</div>
+    </div>
+    <button class="btn" id="btnClose">Luk</button>
+  </div>
+
+  <div class="bd">
+    <div class="field">
+      <label>Navn</label>
+      <input id="setName" type="text" placeholder="fx William" />
+    </div>
+
+    <div class="hr"></div>
+
+    <div class="grid">
+      <div class="field">
+        <label>Mål (timer)</label>
+        <input id="setGoalHours" type="number" min="0" step="0.25" placeholder="fx 50" />
+      </div>
+      <div class="field">
+        <label>Periode</label>
+        <select id="setGoalUnit">
+          <option value="week">Uge</option>
+          <option value="month" selected>Måned</option>
+          <option value="year">År</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="hr"></div>
+
+    <div class="toggle">
+      <div>
+        <div style="font-weight:650">Vis Betel</div>
+        <small>Slå fra hvis I aldrig bruger Betel-feltet.</small>
+      </div>
+      <div class="switch" id="setShowBethel"></div>
+    </div>
+
+    <div class="toggle">
+      <div>
+        <div style="font-weight:650">Vis planlagte timer</div>
+        <small>Vis planlægger i Måned-fanen.</small>
+      </div>
+      <div class="switch" id="setShowPlanned"></div>
+    </div>
+
+    <div class="hr"></div>
+
+    <div class="grid">
+      <div class="field">
+        <label>SMS-nummer</label>
+        <input id="setSMS" type="tel" placeholder="fx +45xxxxxxxx" />
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input id="setEmail" type="email" placeholder="fx ældste@example.com" />
+      </div>
+    </div>
+
+    <div class="hr"></div>
+
+    <div class="field">
+      <label>Tema</label>
+      <div class="themeRow" id="themeRow">
+        <div class="themeSwatch sw-light" data-theme="Lys" title="Lys"></div>
+        <div class="themeSwatch sw-dark" data-theme="dark" title="Mørk"></div>
+        <div class="themeSwatch sw-red" data-theme="Red" title="Rød"></div>
+        <div class="themeSwatch sw-purple" data-theme="Purple" title="Lilla"></div>
+        <div class="themeSwatch sw-green" data-theme="Green" title="Grøn"></div>
+      </div>
+    </div>
+
+    <div class="hr"></div>
+
+    <div class="row" style="margin-top:12px; justify-content:space-between">
+      <button class="btn primary" id="btnSaveSettings">Gem indstillinger</button>
+      <button class="btn" id="btnResetTimes">Nulstil al tid</button>
+      <button class="btn" id="btnResetAll">Nulstil alt</button>
+    </div>
+  </div>
+</aside>
+
+<!-- Bottom nav -->
+<nav class="bottomNav" aria-label="Navigation">
+  <div class="bottomNavInner">
+    <div class="navItem active" data-tab="today" role="button" aria-label="I dag">
+      <div class="navIcon"><div class="navGlyph">I</div></div>
+      <div class="navLabel">I dag</div>
+    </div>
+
+    <div class="navItem" data-tab="month" role="button" aria-label="Måned">
+      <div class="navIcon"><div class="navGlyph">M</div></div>
+      <div class="navLabel">Måned</div>
+    </div>
+
+    <div class="navItem" data-tab="stats" role="button" aria-label="Statistik">
+      <div class="navIcon"><div class="navGlyph">Σ</div></div>
+      <div class="navLabel">Statistik</div>
+    </div>
+
+    <div class="navItem" data-tab="settings" role="button" aria-label="Indstillinger">
+      <div class="navIcon"><div class="navGlyph">⚙</div></div>
+      <div class="navLabel">Settings</div>
+    </div>
+  </div>
+</nav>
+
+<div class="toast" id="toast">
+  <div>
+    <div class="msg" id="toastMsg">—</div>
+    <div class="small" id="toastSmall"></div>
+  </div>
+  <button class="btn" id="toastBtn" style="display:none">OK</button>
+</div>
+
+<script>
+/** -----------------------------------
+ *  Offline ministry log + month planner + stats + bottom navigation
+ *  - localStorage only
+ *  - entries: actual logs per date
+ *  - plans: planned minutes per date (ONLY edited in Month tab)
+ *  - monthNotes: notes per YYYY-MM
+ *  - themes: stored in settings
+ *  ----------------------------------- */
+
+const LS_KEY = "ministry_app_v3";
+
+function makeMonthlyReport({ monthName, year, name, service, bethel, studies, days, monthNote }){
+  return [
+    `Tjenesterapport – ${monthName} ${year}`,
+    `Navn: ${name || "—"}`,
+    `Tjeneste: ${service}`,
+    `Betel: ${bethel}`,
+    `Bibelstudier: ${studies}`,
+    `Dage logget: ${days}`,
+    `Måneds-note: ${monthNote || "—"}`
+  ].join("\n");
+}
+
+const DEFAULTS = {
+  settings: {
+    name: "",
+    goalHours: 50,
+    goalUnit: "month",     // week | month | year
+    showBethel: true,
+    showPlanned: false,
+    smsNumber: "",
+    emailTo: "",
+    theme: "dark"
+  },
+  entries: {
+    // "YYYY-MM-DD": { serviceMin, bethelMin, studies }
+  },
+  plans: {
+    // "YYYY-MM-DD": { plannedServiceMin, plannedBethelMin }
+  },
+  monthNotes: {
+    // "YYYY-MM": "note text"
+  }
+};
+
+function deepClone(obj){ return JSON.parse(JSON.stringify(obj)); }
+
+function migrateState(parsed){
+  const st = {
+    settings: { ...DEFAULTS.settings, ...(parsed?.settings || {}) },
+    entries: { ...(parsed?.entries || {}) },
+    plans: { ...(parsed?.plans || {}) },
+    monthNotes: { ...(parsed?.monthNotes || {}) }
+  };
+
+  // Move any old planned minutes inside entries -> plans
+  for(const [date, e] of Object.entries(st.entries)){
+    if(e && (e.plannedServiceMin || e.plannedBethelMin)){
+      st.plans[date] = {
+        plannedServiceMin: e.plannedServiceMin || 0,
+        plannedBethelMin: e.plannedBethelMin || 0
+      };
+      delete e.plannedServiceMin;
+      delete e.plannedBethelMin;
+
+      const hasActual = (e.serviceMin||0) > 0 || (e.bethelMin||0) > 0 || (e.studies||0) > 0;
+      if(!hasActual) delete st.entries[date];
+    }
+  }
+
+  // Normalize theme values
+  const t = (st.settings.theme || "dark");
+  const map = {
+    "Mørk": "dark",
+    "Lys": "Lys",
+    "Rød": "Red",
+    "Lilla": "Purple",
+    "Grøn": "Green",
+    "light": "Lys"
+  };
+  st.settings.theme = map[t] || t;
+
+  return st;
+}
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if(!raw) return deepClone(DEFAULTS);
+    return migrateState(JSON.parse(raw));
+  } catch {
+    return deepClone(DEFAULTS);
+  }
+}
+function saveState(){
+  localStorage.setItem(LS_KEY, JSON.stringify(state));
+}
+
+function $(sel){ return document.querySelector(sel); }
+function pad2(n){ return String(n).padStart(2,"0"); }
+function todayISO(){
+  const d = new Date();
+  return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+}
+function monthKeyFromISO(iso){ return iso.slice(0,7); }
+function isoFromParts(y, m1, d){ return `${y}-${pad2(m1)}-${pad2(d)}`; }
+
+function monthNameDA(mIndex){
+  const names = ["Januar","Februar","Marts","April","Maj","Juni","Juli","August","September","Oktober","November","December"];
+  return names[mIndex] || "";
+}
+function weekdayNameDA(jsDow){
+  const names = ["Søndag","Mandag","Tirsdag","Onsdag","Torsdag","Fredag","Lørdag"];
+  return names[jsDow] || "";
+}
+
+function parseTimeToMinutes(input){
+  const s = (input || "").trim().toLowerCase();
+  if(!s) return 0;
+
+  if(s.includes(":")){
+    const [h, m] = s.split(":");
+    const hh = Number(h);
+    const mm = Number(m);
+    if(Number.isFinite(hh) && Number.isFinite(mm) && hh >= 0 && mm >= 0 && mm < 60){
+      return Math.round(hh * 60 + mm);
+    }
+    return NaN;
+  }
+
+  if(s.endsWith("m")){
+    const n = Number(s.slice(0,-1));
+    return Number.isFinite(n) && n >= 0 ? Math.round(n) : NaN;
+  }
+  if(s.endsWith("h")){
+    const n = Number(s.slice(0,-1));
+    return Number.isFinite(n) && n >= 0 ? Math.round(n * 60) : NaN;
+  }
+
+  // plain number => hours
+  const n = Number(s);
+  return Number.isFinite(n) && n >= 0 ? Math.round(n * 60) : NaN;
+}
+function minutesToHHMM(min){
+  const m = Math.max(0, Math.round(min || 0));
+  const hh = Math.floor(m / 60);
+  const mm = m % 60;
+  return `${hh}:${pad2(mm)}`;
+}
+function addDaysISO(iso, delta){
+  const d = new Date(iso + "T00:00:00");
+  d.setDate(d.getDate() + delta);
+  return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+}
+
+function toast(msg, small="", buttonText=""){
+  const t = $("#toast");
+  $("#toastMsg").textContent = msg;
+  $("#toastSmall").textContent = small;
+  const btn = $("#toastBtn");
+  if(buttonText){
+    btn.style.display = "inline-flex";
+    btn.textContent = buttonText;
+    btn.onclick = ()=> t.classList.remove("show");
+  } else {
+    btn.style.display = "none";
+  }
+  t.classList.add("show");
+  setTimeout(()=> t.classList.remove("show"), 2600);
+}
+
+let state = loadState();
+let currentDate = todayISO();
+let currentMonthAnchor = currentDate.slice(0,7) + "-01";
+let yearAnchor = currentDate.slice(0,4);
+
+// Selected day for planning in Month tab
+let planSelectedDate = currentDate;
+
+/** UI refs */
+const ui = {
+  // pages
+  pageToday: $("#pageToday"),
+  pageMonth: $("#pageMonth"),
+  pageStats: $("#pageStats"),
+
+  // today
+  dateLabel: $("#dateLabel"),
+  dayDisplay: $("#dayDisplay"),
+  bibleStudies: $("#bibleStudies"),
+  serviceTime: $("#serviceTime"),
+  bethelTime: $("#bethelTime"),
+  bethelFieldWrap: $("#bethelFieldWrap"),
+  dayStatus: $("#dayStatus"),
+
+  // month
+  monthSubtitle: $("#monthSubtitle"),
+  sumService: $("#sumService"),
+  sumBethel: $("#sumBethel"),
+  sumBethelWrap: $("#sumBethelWrap"),
+  sumStudies: $("#sumStudies"),
+  sumDays: $("#sumDays"),
+  goalText: $("#goalText"),
+  progressText: $("#progressText"),
+  meterFill: $("#meterFill"),
+  goalHint: $("#goalHint"),
+  calHead: $("#calHead"),
+  calGrid: $("#calGrid"),
+  monthNote: $("#monthNote"),
+  sumPlanned: $("#sumPlanned"),
+  plannedRemaining: $("#plannedRemaining"),
+
+  // month planner
+  plannerWrap: $("#plannerWrap"),
+  planSelectedDay: $("#planSelectedDay"),
+  plannedServiceTimeMonth: $("#plannedServiceTimeMonth"),
+  plannedBethelTimeMonth: $("#plannedBethelTimeMonth"),
+  plannedBethelFieldWrapMonth: $("#plannedBethelFieldWrapMonth"),
+  planStatus: $("#planStatus"),
+
+  // stats
+  statsYearLabel: $("#statsYearLabel"),
+  yearService: $("#yearService"),
+  yearBethel: $("#yearBethel"),
+  yearBethelCard: $("#yearBethelCard"),
+  yearStudies: $("#yearStudies"),
+  yearDays: $("#yearDays"),
+  allService: $("#allService"),
+  allBethel: $("#allBethel"),
+  allBethelCard: $("#allBethelCard"),
+  allStudies: $("#allStudies"),
+  allDays: $("#allDays"),
+  allYearsText: $("#allYearsText"),
+
+  // drawer/settings
+  drawer: $("#drawer"),
+  backdrop: $("#backdrop"),
+  setName: $("#setName"),
+  setGoalHours: $("#setGoalHours"),
+  setGoalUnit: $("#setGoalUnit"),
+  setShowBethel: $("#setShowBethel"),
+  setShowPlanned: $("#setShowPlanned"),
+  setSMS: $("#setSMS"),
+  setEmail: $("#setEmail"),
+  themeRow: $("#themeRow")
+};
+
+function openDrawer(){
+  ui.backdrop.classList.add("show");
+  ui.drawer.classList.add("open");
+}
+function closeDrawer(){
+  ui.backdrop.classList.remove("show");
+  ui.drawer.classList.remove("open");
+}
+function switchSet(el, on){
+  el.classList.toggle("on", !!on);
+  el.dataset.on = on ? "1" : "0";
+}
+function switchGet(el){
+  return el.dataset.on === "1";
+}
+
+function applyTheme(theme){
+  const t = theme || "dark";
+  document.documentElement.setAttribute("data-theme", t);
+
+  ui.themeRow.querySelectorAll(".themeSwatch").forEach(sw => {
+    sw.classList.toggle("active", sw.dataset.theme === t);
+  });
+
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if(meta){
+    const map = {
+      "Lys": "#ffffff",
+      "dark": "#111827",
+      "Red": "#1a0b10",
+      "Purple": "#120b22",
+      "Green": "#061a14"
+    };
+    meta.setAttribute("content", map[t] || "#111827");
+  }
+}
+
+function applySettingsToUI(){
+  const s = state.settings;
+
+  // bethel visibility
+  ui.bethelFieldWrap.style.display = s.showBethel ? "" : "none";
+  ui.sumBethelWrap.style.display = s.showBethel ? "" : "none";
+  ui.yearBethelCard.style.display = s.showBethel ? "" : "none";
+  ui.allBethelCard.style.display = s.showBethel ? "" : "none";
+  ui.plannedBethelFieldWrapMonth.style.display = (s.showBethel ? "" : "none");
+
+  // planner visibility (ONLY month tab)
+  ui.plannerWrap.style.display = s.showPlanned ? "" : "none";
+
+  // settings fields
+  ui.setName.value = s.name || "";
+  ui.setGoalHours.value = s.goalHours ?? 0;
+  ui.setGoalUnit.value = s.goalUnit || "month";
+  ui.setSMS.value = s.smsNumber || "";
+  ui.setEmail.value = s.emailTo || "";
+
+  switchSet(ui.setShowBethel, !!s.showBethel);
+  switchSet(ui.setShowPlanned, !!s.showPlanned);
+
+  applyTheme(s.theme || "dark");
+}
+
+function getEntry(iso){ return state.entries?.[iso] || null; }
+function getPlan(iso){ return state.plans?.[iso] || null; }
+
+function entryHasAnyData(e){
+  if(!e) return false;
+  const mins = (e.serviceMin||0) + (e.bethelMin||0);
+  return mins > 0 || (e.studies||0) > 0;
+}
+function planHasAnyData(p){
+  if(!p) return false;
+  const mins = (p.plannedServiceMin||0) + (p.plannedBethelMin||0);
+  return mins > 0;
+}
+
+function totalMinutesForEntry(e){
+  const s = state.settings;
+  if(!e) return 0;
+  return (e.serviceMin||0) + (s.showBethel ? (e.bethelMin||0) : 0);
+}
+
+function updateDayHeader(iso){
+  const d = new Date(iso + "T00:00:00");
+  ui.dateLabel.textContent = `${d.getDate()}. ${monthNameDA(d.getMonth())} ${d.getFullYear()}`;
+  ui.dayDisplay.textContent = `${weekdayNameDA(d.getDay())} · ${d.getDate()}. ${monthNameDA(d.getMonth())}`;
+}
+
+function loadEntryToForm(iso){
+  currentDate = iso;
+
+  const e = getEntry(iso) || {};
+
+  ui.bibleStudies.value = e.studies ?? 0;
+  ui.serviceTime.value = e.serviceMin ? minutesToHHMM(e.serviceMin) : "";
+  ui.bethelTime.value = e.bethelMin ? minutesToHHMM(e.bethelMin) : "";
+
+  updateDayHeader(iso);
+  updateDayStatus();
+}
+
+function estimateDailyTargetHours(goalHours, unit, iso){
+  const g = Number(goalHours) || 0;
+  if(g <= 0) return 0;
+
+  const d = new Date(iso + "T00:00:00");
+  if(unit === "week") return g / 7;
+
+  if(unit === "month"){
+    const days = new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
+    return g / days;
+  }
+
+  if(unit === "year"){
+    const year = d.getFullYear();
+    const days = ((year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0)) ? 366 : 365;
+    return g / days;
+  }
+  return 0;
+}
+
+function updateDayStatus(){
+  const iso = currentDate;
+  const s = state.settings;
+  const e = getEntry(iso);
+
+  const actualMin = e ? ((e.serviceMin||0) + (s.showBethel ? (e.bethelMin||0) : 0)) : 0;
+  const actualH = actualMin / 60;
+
+  const perDayTarget = estimateDailyTargetHours(s.goalHours, s.goalUnit, iso);
+  const ok = perDayTarget > 0 ? actualH >= perDayTarget : actualH > 0;
+
+  if(!e){
+    ui.dayStatus.textContent = "Ingen log for dagen";
+    ui.dayStatus.style.borderColor = "rgba(31,41,55,.8)";
+    ui.dayStatus.style.color = "var(--muted)";
+    return;
+  }
+
+  const parts = [];
+  if(actualMin > 0) parts.push(`Log: ${actualH.toFixed(2)}h`);
+  if(e && (e.studies||0) > 0) parts.push(`Studier: ${e.studies}`);
+
+  ui.dayStatus.textContent = parts.join(" · ") || "Data gemt";
+  ui.dayStatus.style.borderColor = ok ? "rgba(52,211,153,.55)" : "rgba(251,191,36,.45)";
+  ui.dayStatus.style.color = ok ? "var(--ok)" : "var(--warn)";
+}
+
+function saveActualFromForm(){
+  const iso = currentDate;
+
+  const serviceMin = parseTimeToMinutes(ui.serviceTime.value);
+  const bethelMin = parseTimeToMinutes(ui.bethelTime.value);
+
+  if([serviceMin, bethelMin].some(v => Number.isNaN(v))){
+    toast("Tidsformat fejl", "Brug fx 1:30, 90m, 1.5h");
+    return;
+  }
+
+  const studies = Math.max(0, Number(ui.bibleStudies.value || 0));
+
+  const hasActual =
+    (serviceMin || 0) > 0 ||
+    (bethelMin || 0) > 0 ||
+    studies > 0;
+
+  if(!state.entries) state.entries = {};
+  if(hasActual){
+    state.entries[iso] = {
+      serviceMin: serviceMin || 0,
+      bethelMin: bethelMin || 0,
+      studies: Number.isFinite(studies) ? studies : 0
+    };
+  } else {
+    delete state.entries[iso];
+  }
+
+  saveState();
+  toast("Gemt", iso);
+  refreshAll();
+}
+
+function clearDay(){
+  const iso = currentDate;
+  if(!confirm("Ryd dagen? (sletter log for dagen)")) return;
+  delete state.entries[iso];
+  saveState();
+  toast("Rykket", "Dagen er ryddet");
+  refreshAll();
+}
+
+function calcMonthSummary(anchorISO){
+  const d = new Date(anchorISO + "T00:00:00");
+  const year = d.getFullYear();
+  const monthIndex = d.getMonth();
+  const ym = `${year}-${pad2(monthIndex+1)}`;
+
+  let serviceMin = 0, bethelMin = 0, studies = 0, daysLogged = 0;
+
+  const keys = Object.keys(state.entries || {}).filter(k => k.startsWith(ym));
+  for(const date of keys){
+    const e = state.entries[date];
+    serviceMin += e.serviceMin || 0;
+    bethelMin += e.bethelMin || 0;
+    studies += e.studies || 0;
+    if(entryHasAnyData(e)) daysLogged += 1;
+  }
+
+  return { year, monthIndex, days: daysLogged, serviceMin, bethelMin, studies };
+}
+
+function calcMonthPlanned(anchorISO){
+  const d = new Date(anchorISO + "T00:00:00");
+  const year = d.getFullYear();
+  const monthIndex = d.getMonth();
+  const ym = `${year}-${pad2(monthIndex+1)}`;
+
+  let plannedServiceMin = 0, plannedBethelMin = 0, plannedDays = 0;
+
+  const keys = Object.keys(state.plans || {}).filter(k => k.startsWith(ym));
+  for(const date of keys){
+    const p = state.plans[date];
+    plannedServiceMin += p.plannedServiceMin || 0;
+    plannedBethelMin += p.plannedBethelMin || 0;
+    if(planHasAnyData(p)) plannedDays += 1;
+  }
+
+  return { year, monthIndex, plannedDays, plannedServiceMin, plannedBethelMin };
+}
+
+function goalForDisplayedMonth(summary){
+  const s = state.settings;
+  const goalHours = Number(s.goalHours) || 0;
+  if(goalHours <= 0) return { goalMin: 0, label: "Intet mål sat" };
+
+  if(s.goalUnit === "month"){
+    return { goalMin: Math.round(goalHours * 60), label: `${goalHours} timer / måned` };
+  }
+  if(s.goalUnit === "week"){
+    const daysInMonth = new Date(summary.year, summary.monthIndex+1, 0).getDate();
+    const goalMin = Math.round(goalHours * 60 * (daysInMonth / 7));
+    return { goalMin, label: `${goalHours} timer / uge (≈ ${minutesToHHMM(goalMin)} i måneden)` };
+  }
+  if(s.goalUnit === "year"){
+    const goalMin = Math.round(goalHours * 60 / 12);
+    return { goalMin, label: `${goalHours} timer / år (≈ ${minutesToHHMM(goalMin)} pr. måned)` };
+  }
+  return { goalMin: 0, label: "Ukendt mål" };
+}
+
+function getMonthNote(ym){
+  return (state.monthNotes?.[ym] ?? "").trim();
+}
+
+function generateReportTextForCurrentMonth(){
+  const summary = calcMonthSummary(currentMonthAnchor);
+  const s = state.settings;
+  const monthName = monthNameDA(summary.monthIndex);
+  const year = summary.year;
+
+  const service = minutesToHHMM(summary.serviceMin);
+  const bethel = s.showBethel ? minutesToHHMM(summary.bethelMin) : "0:00";
+  const studies = summary.studies;
+  const days = summary.days;
+  const name = (s.name || "").trim() || "—";
+
+  const ym = `${summary.year}-${pad2(summary.monthIndex+1)}`;
+  const monthNote = getMonthNote(ym) || "—";
+
+  return makeMonthlyReport({ monthName, year, name, service, bethel, studies, days, monthNote });
+}
+
+function refreshCalendar(){
+  const d = new Date(currentMonthAnchor + "T00:00:00");
+  const year = d.getFullYear();
+  const monthIndex = d.getMonth();
+  const daysInMonth = new Date(year, monthIndex+1, 0).getDate();
+
+  const labels = ["Man","Tir","Ons","Tor","Fre","Lør","Søn"];
+  ui.calHead.innerHTML = labels.map(l => `<div>${l}</div>`).join("");
+
+  const first = new Date(year, monthIndex, 1);
+  const jsDow = first.getDay();          // Sun=0
+  const mon0 = (jsDow + 6) % 7;          // Mon=0..Sun=6
+
+  const today = todayISO();
+  const ym = `${year}-${pad2(monthIndex+1)}`;
+
+  const loggedSet = new Set();
+  for(const [date, entry] of Object.entries(state.entries || {})){
+    if(date.startsWith(ym) && entryHasAnyData(entry)) loggedSet.add(date);
+  }
+
+  const plannedSet = new Set();
+  for(const [date, plan] of Object.entries(state.plans || {})){
+    if(date.startsWith(ym) && planHasAnyData(plan)) plannedSet.add(date);
+  }
+
+  const totalCells = 42;
+  const cells = [];
+  for(let i=0; i<totalCells; i++){
+    const dayNum = i - mon0 + 1;
+    if(dayNum < 1 || dayNum > daysInMonth){
+      cells.push(`<div class="dayCell muted" aria-hidden="true"></div>`);
+      continue;
+    }
+
+    const iso = isoFromParts(year, monthIndex+1, dayNum);
+    const classes = ["dayCell"];
+    if(iso === today) classes.push("today");
+    if(iso === planSelectedDate) classes.push("selected");
+    if(loggedSet.has(iso)) classes.push("logged");
+    if(plannedSet.has(iso)) classes.push("planned");
+
+    cells.push(`
+      <div class="${classes.join(" ")}" data-iso="${iso}" title="${iso}">
+        ${dayNum}
+        <span class="dot"></span>
+      </div>
+    `);
+  }
+
+  ui.calGrid.innerHTML = cells.join("");
+
+  ui.calGrid.querySelectorAll("[data-iso]").forEach(el => {
+    el.addEventListener("click", () => {
+      const iso = el.dataset.iso;
+      if(!iso) return;
+
+      planSelectedDate = iso;
+      // keep anchors aligned with selected month
+      currentMonthAnchor = iso.slice(0,7) + "-01";
+      yearAnchor = iso.slice(0,4);
+
+      refreshMonthPanel();
+      refreshPlannerEditor();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  });
+}
+
+function refreshMonthNoteUI(){
+  const ym = monthKeyFromISO(currentMonthAnchor);
+  ui.monthNote.value = state.monthNotes?.[ym] ?? "";
+}
+
+function refreshMonthPanel(){
+  const d = new Date(currentMonthAnchor + "T00:00:00");
+  ui.monthSubtitle.textContent = `${monthNameDA(d.getMonth())} ${d.getFullYear()}`;
+
+  const summary = calcMonthSummary(currentMonthAnchor);
+  const planned = calcMonthPlanned(currentMonthAnchor);
+
+  ui.sumService.textContent = minutesToHHMM(summary.serviceMin);
+  ui.sumBethel.textContent = minutesToHHMM(summary.bethelMin);
+  ui.sumStudies.textContent = String(summary.studies);
+  ui.sumDays.textContent = String(summary.days);
+
+  const goal = goalForDisplayedMonth(summary);
+  ui.goalText.textContent = goal.label;
+
+  const totalMin = summary.serviceMin + (state.settings.showBethel ? summary.bethelMin : 0);
+  const pct = goal.goalMin > 0 ? Math.min(100, Math.round((totalMin / goal.goalMin) * 100)) : 0;
+  ui.progressText.textContent = `${pct}%`;
+  ui.meterFill.style.width = `${pct}%`;
+
+  const daysInMonth = new Date(summary.year, summary.monthIndex+1, 0).getDate();
+  const perDay = estimateDailyTargetHours(state.settings.goalHours, state.settings.goalUnit, `${summary.year}-${pad2(summary.monthIndex+1)}-01`);
+  ui.goalHint.textContent = (state.settings.goalHours > 0)
+    ? `Estimat: ~${perDay.toFixed(2)} timer pr. dag (fordelt over perioden). Dage i måneden: ${daysInMonth}.`
+    : "Sæt et mål i indstillinger for at se progress.";
+
+  const plannedMin = planned.plannedServiceMin + (state.settings.showBethel ? planned.plannedBethelMin : 0);
+  ui.sumPlanned.textContent = minutesToHHMM(plannedMin);
+
+  if(goal.goalMin > 0){
+    const remain = Math.max(0, goal.goalMin - plannedMin);
+    ui.plannedRemaining.textContent = minutesToHHMM(remain);
+  } else {
+    ui.plannedRemaining.textContent = "—";
+  }
+
+  refreshCalendar();
+  refreshMonthNoteUI();
+}
+
+function formatPlanSelectedLabel(iso){
+  const d = new Date(iso + "T00:00:00");
+  return `${weekdayNameDA(d.getDay())} · ${d.getDate()}. ${monthNameDA(d.getMonth())} ${d.getFullYear()}`;
+}
+
+function refreshPlannerEditor(){
+  ui.planSelectedDay.textContent = formatPlanSelectedLabel(planSelectedDate);
+
+  const p = getPlan(planSelectedDate) || {};
+  ui.plannedServiceTimeMonth.value = p.plannedServiceMin ? minutesToHHMM(p.plannedServiceMin) : "";
+  ui.plannedBethelTimeMonth.value = p.plannedBethelMin ? minutesToHHMM(p.plannedBethelMin) : "";
+
+  const plannedMin = (p.plannedServiceMin||0) + (state.settings.showBethel ? (p.plannedBethelMin||0) : 0);
+  if(plannedMin > 0){
+    ui.planStatus.textContent = `Plan: ${minutesToHHMM(plannedMin)}`;
+    ui.planStatus.style.borderColor = "rgba(52,211,153,.55)";
+    ui.planStatus.style.color = "var(--ok)";
+  } else {
+    ui.planStatus.textContent = "Ingen plan for dagen";
+    ui.planStatus.style.borderColor = "rgba(31,41,55,.8)";
+    ui.planStatus.style.color = "var(--muted)";
+  }
+}
+
+function savePlanForSelectedDay(){
+  const iso = planSelectedDate;
+
+  const plannedServiceMin = parseTimeToMinutes(ui.plannedServiceTimeMonth.value);
+  const plannedBethelMin = parseTimeToMinutes(ui.plannedBethelTimeMonth.value);
+
+  if([plannedServiceMin, plannedBethelMin].some(v => Number.isNaN(v))){
+    toast("Tidsformat fejl", "Brug fx 1:30, 90m, 1.5h");
+    return;
+  }
+
+  const hasPlan =
+    (plannedServiceMin || 0) > 0 ||
+    (plannedBethelMin || 0) > 0;
+
+  if(!state.plans) state.plans = {};
+  if(state.settings.showPlanned && hasPlan){
+    state.plans[iso] = {
+      plannedServiceMin: plannedServiceMin || 0,
+      plannedBethelMin: plannedBethelMin || 0
+    };
+  } else {
+    delete state.plans[iso];
+  }
+
+  saveState();
+  toast("Plan gemt", iso);
+  refreshAll();
+}
+
+function clearPlanForSelectedDay(){
+  const iso = planSelectedDate;
+  if(!confirm("Ryd plan for denne dag?")) return;
+  delete state.plans[iso];
+  saveState();
+  toast("Plan ryddet", iso);
+  refreshAll();
+}
+
+function calcYearSummary(yearStr){
+  const y = String(yearStr);
+  let serviceMin = 0, bethelMin = 0, studies = 0, daysLogged = 0;
+
+  for(const [date, e] of Object.entries(state.entries || {})){
+    if(!date.startsWith(y + "-")) continue;
+    serviceMin += e.serviceMin || 0;
+    bethelMin += e.bethelMin || 0;
+    studies += e.studies || 0;
+    if(entryHasAnyData(e)) daysLogged += 1;
+  }
+
+  return { year: y, serviceMin, bethelMin, studies, daysLogged };
+}
+
+function calcAllTime(){
+  let serviceMin = 0, bethelMin = 0, studies = 0, daysLogged = 0;
+
+  for(const e of Object.values(state.entries || {})){
+    serviceMin += e.serviceMin || 0;
+    bethelMin += e.bethelMin || 0;
+    studies += e.studies || 0;
+    if(entryHasAnyData(e)) daysLogged += 1;
+  }
+  return { serviceMin, bethelMin, studies, daysLogged };
+}
+
+function calcAllYearsBreakdown(){
+  const byYear = new Map(); // year -> {serviceMin, bethelMin, studies, days}
+  for(const [date, e] of Object.entries(state.entries || {})){
+    const y = date.slice(0,4);
+    if(!byYear.has(y)) byYear.set(y, { serviceMin:0, bethelMin:0, studies:0, days:0 });
+    const row = byYear.get(y);
+    row.serviceMin += e.serviceMin || 0;
+    row.bethelMin += e.bethelMin || 0;
+    row.studies += e.studies || 0;
+    if(entryHasAnyData(e)) row.days += 1;
+  }
+
+  const years = Array.from(byYear.keys()).sort();
+  const lines = years.map(y => {
+    const r = byYear.get(y);
+    const totalMin = r.serviceMin + (state.settings.showBethel ? r.bethelMin : 0);
+    const b = state.settings.showBethel ? ` · Betel ${minutesToHHMM(r.bethelMin)}` : "";
+    return `${y}: Total ${minutesToHHMM(totalMin)} · Tjeneste ${minutesToHHMM(r.serviceMin)}${b} · Studier ${r.studies} · Dage ${r.days}`;
+  });
+
+  return lines.join("\n") || "—";
+}
+
+function refreshStatsPanel(){
+  ui.statsYearLabel.textContent = yearAnchor;
+
+  const y = calcYearSummary(yearAnchor);
+  ui.yearService.textContent = minutesToHHMM(y.serviceMin);
+  ui.yearBethel.textContent = minutesToHHMM(y.bethelMin);
+  ui.yearStudies.textContent = String(y.studies);
+  ui.yearDays.textContent = String(y.daysLogged);
+
+  const all = calcAllTime();
+  ui.allService.textContent = minutesToHHMM(all.serviceMin);
+  ui.allBethel.textContent = minutesToHHMM(all.bethelMin);
+  ui.allStudies.textContent = String(all.studies);
+  ui.allDays.textContent = String(all.daysLogged);
+
+  ui.allYearsText.value = calcAllYearsBreakdown();
+}
+
+function refreshAll(){
+  applySettingsToUI();
+  loadEntryToForm(currentDate);
+  // keep plan selected date inside displayed month when possible
+  if(!planSelectedDate) planSelectedDate = currentDate;
+
+  refreshMonthPanel();
+  refreshPlannerEditor();
+  refreshStatsPanel();
+}
+
+/* Navigation */
+function setActiveTab(tab){
+  document.querySelectorAll(".navItem").forEach(it => {
+    it.classList.toggle("active", it.dataset.tab === tab);
+  });
+
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  if(tab === "today") ui.pageToday.classList.add("active");
+  if(tab === "month") ui.pageMonth.classList.add("active");
+  if(tab === "stats") ui.pageStats.classList.add("active");
+}
+
+function navigate(tab){
+  if(tab === "settings"){
+    openDrawer();
+    return;
+  }
+  setActiveTab(tab);
+  closeDrawer();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+/* External actions */
+function openSMS(phone, body){
+  const encoded = encodeURIComponent(body);
+  const p = (phone || "").trim();
+  const urlIOS = `sms:${encodeURIComponent(p)}&body=${encoded}`;
+  const urlAndroid = `sms:${encodeURIComponent(p)}?body=${encoded}`;
+  window.location.href = urlIOS;
+  setTimeout(()=> { window.location.href = urlAndroid; }, 300);
+}
+
+function openEmail(to, subject, body){
+  const url =
+    `mailto:${encodeURIComponent((to||"").trim())}` +
+    `?subject=${encodeURIComponent(subject)}` +
+    `&body=${encodeURIComponent(body)}`;
+  window.location.href = url;
+}
+
+function copyText(text){
+  navigator.clipboard?.writeText(text).then(()=>{
+    toast("Kopieret", "Teksten ligger i udklipsholderen");
+  }).catch(()=>{
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    ta.remove();
+    toast("Kopieret", "Teksten ligger i udklipsholderen");
+  });
+}
+
+/** ----------------
+ *  Events
+ *  ---------------- */
+$("#btnClose").addEventListener("click", closeDrawer);
+ui.backdrop.addEventListener("click", closeDrawer);
+
+document.querySelectorAll(".navItem").forEach(it => {
+  it.addEventListener("click", ()=> navigate(it.dataset.tab));
+});
+
+$("#btnGotoToday").addEventListener("click", ()=> {
+  currentDate = todayISO();
+  currentMonthAnchor = currentDate.slice(0,7) + "-01";
+  yearAnchor = currentDate.slice(0,4);
+  refreshAll();
+});
+
+$("#btnPrevDay").addEventListener("click", ()=> {
+  currentDate = addDaysISO(currentDate, -1);
+  currentMonthAnchor = currentDate.slice(0,7) + "-01";
+  yearAnchor = currentDate.slice(0,4);
+  refreshAll();
+});
+$("#btnNextDay").addEventListener("click", ()=> {
+  currentDate = addDaysISO(currentDate, +1);
+  currentMonthAnchor = currentDate.slice(0,7) + "-01";
+  yearAnchor = currentDate.slice(0,4);
+  refreshAll();
+});
+
+$("#btnPrevMonth").addEventListener("click", ()=> {
+  const d = new Date(currentMonthAnchor + "T00:00:00");
+  d.setMonth(d.getMonth() - 1);
+  currentMonthAnchor = `${d.getFullYear()}-${pad2(d.getMonth()+1)}-01`;
+
+  // keep planSelectedDate inside month (set to 1st)
+  planSelectedDate = currentMonthAnchor;
+  yearAnchor = String(d.getFullYear());
+
+  refreshAll();
+});
+$("#btnNextMonth").addEventListener("click", ()=> {
+  const d = new Date(currentMonthAnchor + "T00:00:00");
+  d.setMonth(d.getMonth() + 1);
+  currentMonthAnchor = `${d.getFullYear()}-${pad2(d.getMonth()+1)}-01`;
+
+  planSelectedDate = currentMonthAnchor;
+  yearAnchor = String(d.getFullYear());
+
+  refreshAll();
+});
+
+$("#btnPlanGoToday").addEventListener("click", ()=> {
+  const t = todayISO();
+  planSelectedDate = t;
+  currentMonthAnchor = t.slice(0,7) + "-01";
+  yearAnchor = t.slice(0,4);
+  refreshAll();
+});
+$("#btnPlanOpenDay").addEventListener("click", ()=> {
+  currentDate = planSelectedDate;
+  currentMonthAnchor = currentDate.slice(0,7) + "-01";
+  yearAnchor = currentDate.slice(0,4);
+  refreshAll();
+  navigate("today");
+});
+
+$("#btnSave").addEventListener("click", saveActualFromForm);
+$("#btnClear").addEventListener("click", clearDay);
+
+$("#btnSavePlan").addEventListener("click", savePlanForSelectedDay);
+$("#btnClearPlan").addEventListener("click", clearPlanForSelectedDay);
+
+$("#btnSaveMonthNote").addEventListener("click", ()=> {
+  const ym = monthKeyFromISO(currentMonthAnchor);
+  const text = (ui.monthNote.value || "").trim();
+  if(!state.monthNotes) state.monthNotes = {};
+  state.monthNotes[ym] = text;
+  saveState();
+  toast("Gemt", `Måneds-note: ${ym}`);
+  refreshAll();
+});
+
+$("#btnClearMonthNote").addEventListener("click", ()=> {
+  const ym = monthKeyFromISO(currentMonthAnchor);
+  if(!confirm("Ryd måneds-note for denne måned?")) return;
+  if(!state.monthNotes) state.monthNotes = {};
+  delete state.monthNotes[ym];
+  saveState();
+  ui.monthNote.value = "";
+  toast("Rykket", `Måneds-note ryddet: ${ym}`);
+  refreshAll();
+});
+
+$("#btnCopyReport").addEventListener("click", ()=> {
+  copyText(generateReportTextForCurrentMonth());
+});
+
+$("#btnSMS").addEventListener("click", ()=> {
+  const text = generateReportTextForCurrentMonth();
+  openSMS(state.settings.smsNumber, text);
+});
+
+$("#btnMail").addEventListener("click", ()=> {
+  const d = new Date(currentMonthAnchor + "T00:00:00");
+  const body = generateReportTextForCurrentMonth();
+  const subject = `Tjenesterapport – ${monthNameDA(d.getMonth())} ${d.getFullYear()}`;
+  openEmail(state.settings.emailTo, subject, body);
+});
+
+/** Stats year nav */
+$("#btnPrevYear").addEventListener("click", ()=> {
+  yearAnchor = String(Number(yearAnchor) - 1);
+  refreshStatsPanel();
+});
+$("#btnNextYear").addEventListener("click", ()=> {
+  yearAnchor = String(Number(yearAnchor) + 1);
+  refreshStatsPanel();
+});
+$("#btnStatsGoCurrentYear").addEventListener("click", ()=> {
+  yearAnchor = todayISO().slice(0,4);
+  refreshStatsPanel();
+});
+
+/** Settings toggles */
+ui.setShowBethel.addEventListener("click", ()=> switchSet(ui.setShowBethel, !switchGet(ui.setShowBethel)));
+ui.setShowPlanned.addEventListener("click", ()=> switchSet(ui.setShowPlanned, !switchGet(ui.setShowPlanned)));
+
+/** Theme picker */
+ui.themeRow.querySelectorAll(".themeSwatch").forEach(sw => {
+  sw.addEventListener("click", ()=> {
+    const t = sw.dataset.theme || "dark";
+    state.settings.theme = t;
+    saveState();
+    applyTheme(t);
+    toast("Tema skiftet", t);
+  });
+});
+
+$("#btnSaveSettings").addEventListener("click", ()=> {
+  const goalHours = Number(ui.setGoalHours.value || 0);
+  const goalUnit = ui.setGoalUnit.value;
+
+  state.settings.name = (ui.setName.value || "").trim();
+  state.settings.goalHours = Number.isFinite(goalHours) && goalHours >= 0 ? goalHours : 0;
+  state.settings.goalUnit = (goalUnit === "week" || goalUnit === "month" || goalUnit === "year") ? goalUnit : "month";
+  state.settings.showBethel = switchGet(ui.setShowBethel);
+  state.settings.showPlanned = switchGet(ui.setShowPlanned);
+  state.settings.smsNumber = (ui.setSMS.value || "").trim();
+  state.settings.emailTo = (ui.setEmail.value || "").trim();
+
+  saveState();
+  toast("Indstillinger gemt");
+  closeDrawer();
+  refreshAll();
+});
+
+$("#btnResetAll").addEventListener("click", ()=> {
+  if(!confirm("Nulstil ALT? (sletter logs, planer, noter og indstillinger)")) return;
+  state = deepClone(DEFAULTS);
+  saveState();
+  toast("Nulstillet", "Alt er slettet");
+  closeDrawer();
+  currentDate = todayISO();
+  currentMonthAnchor = currentDate.slice(0,7) + "-01";
+  yearAnchor = currentDate.slice(0,4);
+  planSelectedDate = currentDate;
+  refreshAll();
+  navigate("today");
+});
+
+$("#btnResetTimes").addEventListener("click", ()=> {
+  if(!confirm("Nulstil al tid? (sletter logs + planer, men beholder indstillinger + måneds-noter)")) return;
+  state.entries = {};
+  state.plans = {};
+  saveState();
+  toast("Nulstillet", "Logs + planer er slettet");
+  closeDrawer();
+  currentDate = todayISO();
+  currentMonthAnchor = currentDate.slice(0,7) + "-01";
+  yearAnchor = currentDate.slice(0,4);
+  planSelectedDate = currentDate;
+  refreshAll();
+});
+
+/** Init */
+(function init(){
+  applyTheme(state.settings.theme || "dark");
+  planSelectedDate = currentDate;
+  refreshAll();
+  navigate("today");
+})();
+</script>
+</body>
+</html>
