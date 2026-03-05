@@ -1,40 +1,186 @@
 <!doctype html>
-<html lang="da">
+<html lang="da" data-theme="dark">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#111827" />
   <title>Tjenestetimer</title>
+
   <style>
+    /* -------------------------
+       THEME TOKENS (default: dark)
+       ------------------------- */
     :root{
       --bg:#0b1220;
+      --bg2:#0a1020;
+
       --card:#111827;
       --card2:#0f172a;
+
       --text:#e5e7eb;
       --muted:#9ca3af;
       --line:#1f2937;
+
       --accent:#60a5fa;
+      --accent2:#34d399;
+
       --ok:#34d399;
       --warn:#fbbf24;
       --danger:#f87171;
+
       --shadow: 0 10px 30px rgba(0,0,0,.35);
       --radius: 18px;
+
+      --headerBg: rgba(11,18,32,.72);
+      --panelBg1: rgba(17,24,39,.82);
+      --panelBg2: rgba(15,23,42,.82);
+
+      --inputBg: rgba(2,6,23,.25);
+      --btnBg: rgba(17,24,39,.75);
+      --btnBgHover: rgba(17,24,39,.95);
+
+      --calBg: rgba(2,6,23,.18);
+      --cellBg: rgba(17,24,39,.45);
+      --cellBgHover: rgba(17,24,39,.80);
+
+      --navBg: rgba(11,18,32,.70);
+      --navBorder: rgba(31,41,55,.75);
+      --navActiveBg: rgba(96,165,250,.18);
     }
+
+    /* Light */
+    html[data-theme="light"], html[data-theme="Lys"]{
+      --bg:#f3f4f6;
+      --bg2:#ffffff;
+
+      --card:#ffffff;
+      --card2:#f9fafb;
+
+      --text:#111827;
+      --muted:#6b7280;
+      --line:#e5e7eb;
+
+      --accent:#2563eb;
+      --accent2:#10b981;
+
+      --ok:#10b981;
+      --warn:#f59e0b;
+      --danger:#ef4444;
+
+      --shadow: 0 10px 30px rgba(0,0,0,.10);
+
+      --headerBg: rgba(255,255,255,.75);
+      --panelBg1: rgba(255,255,255,.92);
+      --panelBg2: rgba(249,250,251,.92);
+
+      --inputBg: rgba(255,255,255,.85);
+      --btnBg: rgba(255,255,255,.88);
+      --btnBgHover: rgba(255,255,255,.96);
+
+      --calBg: rgba(255,255,255,.85);
+      --cellBg: rgba(255,255,255,.90);
+      --cellBgHover: rgba(255,255,255,.98);
+
+      --navBg: rgba(255,255,255,.86);
+      --navBorder: rgba(229,231,235,.95);
+      --navActiveBg: rgba(37,99,235,.12);
+    }
+
+    /* Dark Red */
+    html[data-theme="Red"]{
+      --bg:#1a0b10;
+      --bg2:#16080d;
+
+      --accent:#fb7185;
+      --accent2:#fbbf24;
+
+      --headerBg: rgba(26,11,16,.72);
+
+      --panelBg1: rgba(33,14,20,.86);
+      --panelBg2: rgba(21,10,14,.86);
+
+      --inputBg: rgba(14,6,8,.28);
+      --btnBg: rgba(33,14,20,.72);
+      --btnBgHover: rgba(33,14,20,.92);
+
+      --calBg: rgba(14,6,8,.22);
+      --cellBg: rgba(33,14,20,.46);
+      --cellBgHover: rgba(33,14,20,.82);
+
+      --navBg: rgba(26,11,16,.72);
+      --navActiveBg: rgba(251,113,133,.14);
+    }
+
+    /* Dark Purple */
+    html[data-theme="Purple"], html[data-theme="Lilla"]{
+      --bg:#120b22;
+      --bg2:#0f081d;
+
+      --accent:#a78bfa;
+      --accent2:#34d399;
+
+      --headerBg: rgba(18,11,34,.72);
+
+      --panelBg1: rgba(24,15,44,.86);
+      --panelBg2: rgba(15,10,29,.86);
+
+      --inputBg: rgba(10,7,18,.30);
+      --btnBg: rgba(24,15,44,.72);
+      --btnBgHover: rgba(24,15,44,.92);
+
+      --calBg: rgba(10,7,18,.22);
+      --cellBg: rgba(24,15,44,.46);
+      --cellBgHover: rgba(24,15,44,.82);
+
+      --navBg: rgba(18,11,34,.72);
+      --navActiveBg: rgba(167,139,250,.14);
+    }
+
+    /* Dark Green */
+    html[data-theme="Green"], html[data-theme="Grøn"]{
+      --bg:#061a14;
+      --bg2:#051510;
+
+      --accent:#34d399;
+      --accent2:#60a5fa;
+
+      --headerBg: rgba(6,26,20,.72);
+
+      --panelBg1: rgba(10,34,26,.86);
+      --panelBg2: rgba(6,21,16,.86);
+
+      --inputBg: rgba(4,14,11,.28);
+      --btnBg: rgba(10,34,26,.72);
+      --btnBgHover: rgba(10,34,26,.92);
+
+      --calBg: rgba(4,14,11,.22);
+      --cellBg: rgba(10,34,26,.46);
+      --cellBgHover: rgba(10,34,26,.82);
+
+      --navBg: rgba(6,26,20,.72);
+      --navActiveBg: rgba(52,211,153,.14);
+    }
+
+    /* -------------------------
+       BASE UI
+       ------------------------- */
     *{box-sizing:border-box}
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      background: radial-gradient(1200px 800px at 20% -10%, rgba(96,165,250,.18), transparent 55%),
-                  radial-gradient(900px 600px at 90% 10%, rgba(52,211,153,.12), transparent 55%),
-                  var(--bg);
+      background:
+        radial-gradient(1200px 800px at 20% -10%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 55%),
+        radial-gradient(900px 600px at 90% 10%, color-mix(in srgb, var(--accent2) 12%, transparent), transparent 55%),
+        var(--bg);
       color:var(--text);
       min-height:100vh;
     }
+
     header{
       position:sticky; top:0; z-index:10;
-      background: rgba(11,18,32,.72);
+      background: var(--headerBg);
       backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(31,41,55,.7);
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
     }
     .topbar{
       display:flex; align-items:center; justify-content:space-between;
@@ -48,50 +194,45 @@
     .brand .dot{
       width:12px; height:12px; border-radius:50%;
       background: var(--accent);
-      box-shadow: 0 0 0 4px rgba(96,165,250,.18);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent);
     }
-    .actions{display:flex; gap:10px; align-items:center}
+
     button, input, select, textarea{ font: inherit; color: var(--text); }
 
     .btn{
-      border: 1px solid rgba(31,41,55,.9);
-      background: rgba(17,24,39,.75);
+      border: 1px solid color-mix(in srgb, var(--line) 90%, transparent);
+      background: var(--btnBg);
       padding:10px 12px;
       border-radius: 12px;
       cursor:pointer;
       transition: .15s transform, .15s background, .15s border-color;
       user-select:none;
     }
-    .btn:hover{ background: rgba(17,24,39,.95); border-color: rgba(96,165,250,.35) }
+    .btn:hover{ background: var(--btnBgHover); border-color: color-mix(in srgb, var(--accent) 35%, var(--line)); }
     .btn:active{ transform: translateY(1px) }
     .btn.primary{
-      background: rgba(96,165,250,.18);
-      border-color: rgba(96,165,250,.45);
+      background: color-mix(in srgb, var(--accent) 18%, transparent);
+      border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
     }
-    .btn.primary:hover{ background: rgba(96,165,250,.26) }
+    .btn.primary:hover{ background: color-mix(in srgb, var(--accent) 26%, transparent); }
     .btn.ghost{ background: transparent; }
 
     .container{
       max-width: 1100px;
       margin: 18px auto;
-      padding: 0 16px 40px;
-      display:grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: 16px;
+      padding: 0 16px calc(96px + env(safe-area-inset-bottom));
     }
-    @media (max-width: 920px){
-      .container{ grid-template-columns: 1fr; }
-    }
+
     .card{
-      background: linear-gradient(180deg, rgba(17,24,39,.82), rgba(15,23,42,.82));
-      border: 1px solid rgba(31,41,55,.8);
+      background: linear-gradient(180deg, var(--panelBg1), var(--panelBg2));
+      border: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow:hidden;
     }
     .card .hd{
       padding: 14px 16px;
-      border-bottom: 1px solid rgba(31,41,55,.7);
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -119,8 +260,8 @@
     .field input, .field select, .field textarea{
       width:100%;
       border-radius: 12px;
-      border: 1px solid rgba(31,41,55,.9);
-      background: rgba(2,6,23,.25);
+      border: 1px solid color-mix(in srgb, var(--line) 90%, transparent);
+      background: var(--inputBg);
       padding: 10px 11px;
       outline: none;
     }
@@ -138,32 +279,38 @@
       gap:8px;
       padding: 8px 10px;
       border-radius: 999px;
-      border: 1px solid rgba(31,41,55,.8);
-      background: rgba(2,6,23,.25);
+      border: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+      background: color-mix(in srgb, var(--inputBg) 100%, transparent);
       color: var(--muted);
       font-size: 13px;
     }
+
     .meter{
       height: 10px;
-      background: rgba(31,41,55,.7);
+      background: color-mix(in srgb, var(--line) 70%, transparent);
       border-radius: 999px;
       overflow:hidden;
-      border: 1px solid rgba(31,41,55,.8);
+      border: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
     }
     .meter > div{
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, rgba(96,165,250,.95), rgba(52,211,153,.95));
+      background: linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--accent) 95%, transparent),
+        color-mix(in srgb, var(--accent2) 95%, transparent)
+      );
     }
+
     .hint{color: var(--muted); font-size: 12px; line-height: 1.35}
-    .hr{height:1px; background: rgba(31,41,55,.7); margin: 14px 0}
+    .hr{height:1px; background: color-mix(in srgb, var(--line) 70%, transparent); margin: 14px 0}
     .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
 
     /* Calendar */
     .cal{
       margin-top: 10px;
-      border: 1px solid rgba(31,41,55,.75);
-      background: rgba(2,6,23,.18);
+      border: 1px solid color-mix(in srgb, var(--line) 75%, transparent);
+      background: var(--calBg);
       border-radius: 16px;
       padding: 10px;
     }
@@ -185,16 +332,16 @@
       position: relative;
       padding: 10px 0;
       border-radius: 14px;
-      border: 1px solid rgba(31,41,55,.65);
-      background: rgba(17,24,39,.45);
+      border: 1px solid color-mix(in srgb, var(--line) 65%, transparent);
+      background: var(--cellBg);
       text-align:center;
       cursor:pointer;
       user-select:none;
       transition: .12s transform, .12s border-color, .12s background;
     }
     .dayCell:hover{
-      background: rgba(17,24,39,.8);
-      border-color: rgba(96,165,250,.35);
+      background: var(--cellBgHover);
+      border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
     }
     .dayCell:active{ transform: translateY(1px); }
     .dayCell.muted{
@@ -202,15 +349,18 @@
       cursor: default;
     }
     .dayCell.today{
-      border-color: rgba(96,165,250,.6);
-      box-shadow: 0 0 0 3px rgba(96,165,250,.12) inset;
+      border-color: color-mix(in srgb, var(--accent) 60%, transparent);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 12%, transparent) inset;
     }
     .dayCell.selected{
-      border-color: rgba(52,211,153,.65);
-      box-shadow: 0 0 0 3px rgba(52,211,153,.12) inset;
+      border-color: color-mix(in srgb, var(--accent2) 65%, transparent);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent2) 12%, transparent) inset;
     }
     .dayCell.logged{
-      border-color: rgba(52,211,153,.38);
+      border-color: color-mix(in srgb, var(--ok) 38%, transparent);
+    }
+    .dayCell.planned{
+      border-color: color-mix(in srgb, var(--accent) 45%, transparent);
     }
     .dot{
       position:absolute;
@@ -220,15 +370,10 @@
       width: 6px;
       height: 6px;
       border-radius: 999px;
-      background: rgba(52,211,153,.95);
       display:none;
     }
-    .dayCell.logged .dot{ display:block; }
-    .minitext{
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 4px;
-    }
+    .dayCell.logged .dot{ display:block; background: color-mix(in srgb, var(--ok) 95%, transparent); }
+    .dayCell.planned .dot{ display:block; background: color-mix(in srgb, var(--accent) 95%, transparent); }
 
     /* Drawer */
     .backdrop{
@@ -241,8 +386,8 @@
       position: fixed; top:0; right:0;
       width: min(420px, 92vw);
       height: 100vh;
-      background: linear-gradient(180deg, rgba(17,24,39,.96), rgba(15,23,42,.96));
-      border-left: 1px solid rgba(31,41,55,.8);
+      background: linear-gradient(180deg, color-mix(in srgb, var(--card) 96%, transparent), color-mix(in srgb, var(--card2) 96%, transparent));
+      border-left: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
       box-shadow: -20px 0 50px rgba(0,0,0,.35);
       transform: translateX(105%);
       transition: .2s transform;
@@ -254,7 +399,7 @@
     .backdrop.show{ display:block }
     .drawer .hd{
       padding: 14px 16px;
-      border-bottom: 1px solid rgba(31,41,55,.7);
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -269,16 +414,16 @@
       gap: 12px;
       padding: 10px 12px;
       border-radius: 14px;
-      border: 1px solid rgba(31,41,55,.75);
-      background: rgba(2,6,23,.22);
+      border: 1px solid color-mix(in srgb, var(--line) 75%, transparent);
+      background: color-mix(in srgb, var(--inputBg) 85%, transparent);
       margin-bottom: 10px;
     }
     .toggle small{ color: var(--muted); display:block; margin-top:2px }
     .switch{
       width: 48px; height: 28px;
       border-radius: 999px;
-      border: 1px solid rgba(31,41,55,.9);
-      background: rgba(2,6,23,.35);
+      border: 1px solid color-mix(in srgb, var(--line) 90%, transparent);
+      background: color-mix(in srgb, var(--inputBg) 100%, transparent);
       position: relative;
       cursor:pointer;
       flex: 0 0 auto;
@@ -289,33 +434,170 @@
       top: 3px; left: 3px;
       width: 22px; height: 22px;
       border-radius: 50%;
-      background: rgba(229,231,235,.9);
+      background: color-mix(in srgb, var(--text) 90%, transparent);
       transition: .15s left, .15s background;
     }
     .switch.on{
-      background: rgba(52,211,153,.18);
-      border-color: rgba(52,211,153,.55);
+      background: color-mix(in srgb, var(--accent2) 18%, transparent);
+      border-color: color-mix(in srgb, var(--accent2) 55%, transparent);
     }
-    .switch.on::after{ left: 23px; background: rgba(52,211,153,.95) }
+    .switch.on::after{ left: 23px; background: color-mix(in srgb, var(--accent2) 95%, transparent) }
 
+    /* Theme picker */
+    .themeRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top: 8px;
+    }
+    .themeSwatch{
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 2px solid color-mix(in srgb, var(--line) 75%, transparent);
+      cursor:pointer;
+      position: relative;
+      box-shadow: 0 8px 18px rgba(0,0,0,.18);
+    }
+    .themeSwatch.active{
+      border-color: color-mix(in srgb, var(--accent) 70%, transparent);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent), 0 8px 18px rgba(0,0,0,.18);
+    }
+    .themeSwatch::after{
+      content:"";
+      position:absolute;
+      inset: 5px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+    }
+    .sw-dark{ background: radial-gradient(circle at 30% 25%, #60a5fa55, transparent 55%), #0b1220; }
+    .sw-light{ background: radial-gradient(circle at 30% 25%, #2563eb33, transparent 55%), #f3f4f6; }
+    .sw-red{ background: radial-gradient(circle at 30% 25%, #fb718566, transparent 55%), #1a0b10; }
+    .sw-purple{ background: radial-gradient(circle at 30% 25%, #a78bfa66, transparent 55%), #120b22; }
+    .sw-green{ background: radial-gradient(circle at 30% 25%, #34d39966, transparent 55%), #061a14; }
+
+    /* Toast */
     .toast{
       position: fixed;
       left: 50%;
-      bottom: 18px;
+      bottom: calc(78px + env(safe-area-inset-bottom));
       transform: translateX(-50%);
       padding: 10px 12px;
       border-radius: 12px;
-      border: 1px solid rgba(31,41,55,.8);
-      background: rgba(17,24,39,.92);
+      border: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+      background: color-mix(in srgb, var(--card) 92%, transparent);
       box-shadow: var(--shadow);
       color: var(--text);
       display:none;
-      z-index: 100;
+      z-index: 120;
       max-width: min(820px, 92vw);
       font-size: 14px;
     }
     .toast.show{ display:flex; align-items:center; gap:10px; justify-content:space-between; }
     .toast .small{ color: var(--muted); font-size: 12px; }
+
+    /* -------------------------
+       Bottom navigation
+       ------------------------- */
+    .bottomNav{
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+      background: var(--navBg);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--navBorder);
+      z-index: 90;
+    }
+    .bottomNavInner{
+      max-width: 1100px;
+      margin: 0 auto;
+      display:flex;
+      justify-content:space-between;
+      gap: 8px;
+      align-items:flex-end;
+    }
+    .navItem{
+      flex: 1 1 0;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap: 6px;
+      color: var(--muted);
+      text-decoration:none;
+      cursor:pointer;
+      user-select:none;
+      padding: 6px 4px;
+      border-radius: 14px;
+      transition: .12s background, .12s transform;
+    }
+    .navItem:hover{ background: color-mix(in srgb, var(--inputBg) 70%, transparent); }
+    .navItem:active{ transform: translateY(1px); }
+    .navIcon{
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      border: 1px solid color-mix(in srgb, var(--line) 75%, transparent);
+      background: color-mix(in srgb, var(--inputBg) 100%, transparent);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow: 0 10px 22px rgba(0,0,0,.22);
+      position: relative;
+      overflow:hidden;
+    }
+    .navIcon::before{
+      content:"";
+      position:absolute;
+      inset:-18px;
+      background: radial-gradient(circle at 30% 25%, color-mix(in srgb, var(--accent) 28%, transparent), transparent 55%);
+      opacity:.9;
+      pointer-events:none;
+    }
+    .navGlyph{
+      position: relative;
+      z-index: 1;
+      font-weight: 800;
+      letter-spacing: .2px;
+      color: color-mix(in srgb, var(--text) 92%, transparent);
+      font-size: 14px;
+    }
+    .navLabel{
+      font-size: 11px;
+      line-height: 1;
+    }
+    .navItem.active{
+      color: var(--text);
+    }
+    .navItem.active .navIcon{
+      border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+      background: var(--navActiveBg);
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 14%, transparent), 0 10px 22px rgba(0,0,0,.22);
+    }
+
+    /* Pages */
+    .page{ display:none; }
+    .page.active{ display:block; }
+
+    /* Stats cards */
+    .statsGrid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 10px;
+    }
+    @media (max-width: 520px){
+      .statsGrid{ grid-template-columns: 1fr; }
+    }
+    .statCard{
+      border: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+      background: color-mix(in srgb, var(--inputBg) 90%, transparent);
+      border-radius: 16px;
+      padding: 12px;
+    }
+    .statCard .k{ color: var(--muted); font-size: 12px; }
+    .statCard .v{ font-size: 20px; font-weight: 800; margin-top: 6px; }
+    .statCard .s{ color: var(--muted); font-size: 12px; margin-top: 6px; line-height: 1.35; }
   </style>
 </head>
 
@@ -324,178 +606,304 @@
   <div class="topbar">
     <div class="brand">
       <div class="dot"></div>
-      <div>
-        <div>Tjenestetimer</div>
-        <div class="sub" id="subtitle">Offline webapp · lokal lagring</div>
-      </div>
+      <div>Tjenestetimer</div>
     </div>
-    <div class="actions">
-      <button class="btn ghost" id="btnToday">I dag</button>
-      <button class="btn primary" id="btnSettings">Indstillinger</button>
-    </div>
+    <!-- Removed top buttons (now only bottom nav) -->
+    <div style="width:44px; height:1px" aria-hidden="true"></div>
   </div>
 </header>
 
 <div class="container">
-  <!-- LEFT: Daily entry -->
-  <section class="card">
-    <div class="hd">
-      <div>
-        <div class="title">Daglig log</div>
-        <div class="sub" id="dateLabel"></div>
-      </div>
-      <div class="row">
-        <button class="btn" id="btnPrevDay">◀</button>
-        <button class="btn" id="btnNextDay">▶</button>
-      </div>
-    </div>
 
-    <div class="bd">
-      <div class="grid">
-        <div class="field">
-          <label>Dato</label>
-          <input id="dateInput" type="date" />
+  <!-- PAGE: TODAY -->
+  <section class="page active" id="pageToday">
+    <section class="card">
+      <div class="hd">
+        <div>
+          <div class="title">I dag</div>
+          <div class="sub" id="dateLabel"></div>
         </div>
-
-        <div class="field">
-          <label>Bibelstudier (antal)</label>
-          <input id="bibleStudies" type="number" min="0" step="1" placeholder="0" />
-        </div>
-
-        <div class="field">
-          <label>Tjeneste (timer:min)</label>
-          <input id="serviceTime" type="text" placeholder="fx 1:30 eller 2:00" />
-        </div>
-
-        <div class="field" id="bethelFieldWrap">
-          <label>Betel (timer:min)</label>
-          <input id="bethelTime" type="text" placeholder="fx 0:45" />
-        </div>
-      </div>
-
-      <div class="hr"></div>
-
-      <div class="grid" id="plannedWrap">
-        <div class="field">
-          <label>Planlagt tjeneste (timer:min)</label>
-          <input id="plannedServiceTime" type="text" placeholder="fx 2:00" />
-        </div>
-        <div class="field" id="plannedBethelFieldWrap">
-          <label>Planlagt Betel (timer:min)</label>
-          <input id="plannedBethelTime" type="text" placeholder="fx 1:00" />
-        </div>
-      </div>
-
-      <div class="row" style="margin-top:12px; justify-content:space-between">
         <div class="row">
-          <button class="btn primary" id="btnSave">Gem</button>
-          <button class="btn" id="btnClear">Ryd dagen</button>
+          <button class="btn" id="btnPrevDay">◀</button>
+          <button class="btn" id="btnNextDay">▶</button>
         </div>
-        <div class="pill" id="dayStatus">—</div>
       </div>
 
-      <div class="hint" style="margin-top:10px">
-        Tip: Du kan skrive tid som <span class="mono">1:30</span> (1 time 30 min), <span class="mono">90m</span>, <span class="mono">1.5h</span> eller <span class="mono">2</span> (timer).
+      <div class="bd">
+        <div class="grid">
+          <div class="field">
+            <label>Dag</label>
+            <div class="row" style="justify-content:space-between">
+              <div class="pill" id="dayDisplay" style="flex:1; min-width: 180px; justify-content:center">—</div>
+              <button class="btn" id="btnGotoToday" type="button">I dag</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Bibelstudier</label>
+            <input id="bibleStudies" type="number" min="0" step="1" placeholder="0" />
+          </div>
+
+          <div class="field">
+            <label>Tjeneste</label>
+            <input id="serviceTime" type="text" placeholder="fx 1:30 eller 2:00" />
+          </div>
+
+          <div class="field" id="bethelFieldWrap">
+            <label>Betel</label>
+            <input id="bethelTime" type="text" placeholder="fx 0:45" />
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="row" style="margin-top:12px; justify-content:space-between">
+          <div class="row">
+            <button class="btn primary" id="btnSave">Gem</button>
+            <button class="btn" id="btnClear">Ryd dagen</button>
+          </div>
+          <div class="pill" id="dayStatus">—</div>
+        </div>
+
+        <div class="hint" style="margin-top:12px">
+          (Planlagte timer styres i <b>Måned</b>-fanen.)
+        </div>
       </div>
-    </div>
+    </section>
   </section>
 
-  <!-- RIGHT: Month summary + report + calendar -->
-  <aside class="card">
-    <div class="hd">
-      <div>
-        <div class="title">Månedsoversigt</div>
-        <div class="sub" id="monthLabel"></div>
-      </div>
-      <div class="row">
-        <button class="btn" id="btnPrevMonth">◀</button>
-        <button class="btn" id="btnNextMonth">▶</button>
-      </div>
-    </div>
-
-    <div class="bd">
-      <div class="row" style="justify-content:space-between">
-        <div class="pill">Tjeneste: <span id="sumService">0:00</span></div>
-        <div class="pill" id="sumBethelWrap">Betel: <span id="sumBethel">0:00</span></div>
-      </div>
-
-      <div class="row" style="margin-top:10px; justify-content:space-between">
-        <div class="pill">Bibelstudier: <span id="sumStudies">0</span></div>
-        <div class="pill">Dage logget: <span id="sumDays">0</span></div>
-      </div>
-
-      <div class="hr"></div>
-
-      <div>
-        <div class="row" style="justify-content:space-between; margin-bottom:8px">
-          <div class="pill">Mål (periode): <span id="goalText">—</span></div>
-          <div class="pill">Progress: <span id="progressText">0%</span></div>
+  <!-- PAGE: MONTH -->
+  <section class="page" id="pageMonth">
+    <section class="card">
+      <div class="hd">
+        <div>
+          <div class="title">Måned</div>
+          <div class="sub" id="monthSubtitle"></div>
         </div>
-        <div class="meter"><div id="meterFill"></div></div>
-        <div class="hint" style="margin-top:8px" id="goalHint">—</div>
-      </div>
-
-      <div class="hr"></div>
-
-      <div class="title" style="font-size:14px; margin-bottom:6px">Kalender</div>
-      <div class="cal">
-        <div class="calHead" id="calHead"></div>
-        <div class="calGrid" id="calGrid"></div>
-        <div class="minitext" style="margin-top:8px">
-          Grøn prik = der er registreret timer på dagen. Klik på en dag for at åbne den.
+        <div class="row">
+          <button class="btn" id="btnPrevMonth">◀</button>
+          <button class="btn" id="btnNextMonth">▶</button>
         </div>
       </div>
 
-      <div class="hr"></div>
+      <div class="bd">
+        <div class="row" style="justify-content:space-between">
+          <div class="pill">Tjeneste: <span id="sumService">0:00</span></div>
+          <div class="pill" id="sumBethelWrap">Betel: <span id="sumBethel">0:00</span></div>
+        </div>
 
-      <div class="field">
-        <label>Måneds-note (gemmes pr. måned)</label>
-        <textarea id="monthNote" placeholder="Note til denne måned…"></textarea>
+        <div class="row" style="margin-top:10px; justify-content:space-between">
+          <div class="pill">Bibelstudier: <span id="sumStudies">0</span></div>
+          <div class="pill">Dage logget: <span id="sumDays">0</span></div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div>
+          <div class="row" style="justify-content:space-between; margin-bottom:8px">
+            <div class="pill">Mål: <span id="goalText">—</span></div>
+            <div class="pill">Progress: <span id="progressText">0%</span></div>
+          </div>
+          <div class="meter"><div id="meterFill"></div></div>
+          <div class="hint" style="margin-top:8px" id="goalHint">—</div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="title" style="font-size:14px; margin-bottom:6px">Kalender</div>
+        <div class="cal">
+          <div class="calHead" id="calHead"></div>
+          <div class="calGrid" id="calGrid"></div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="row" style="justify-content:space-between; align-items:flex-start">
+          <div style="flex:1; min-width: 220px">
+            <div class="field">
+              <label>Måneds-note</label>
+              <textarea id="monthNote" placeholder="Note til denne måned…"></textarea>
+            </div>
+            <div class="row" style="margin-top:10px">
+              <button class="btn" id="btnSaveMonthNote">Gem måneds-note</button>
+              <button class="btn" id="btnClearMonthNote">Ryd note</button>
+            </div>
+          </div>
+
+          <div style="flex:1; min-width: 220px">
+            <div class="field">
+              <label>Plan (samlet for måneden)</label>
+
+              <div class="pill" style="width:100%; justify-content:space-between">
+                <span>Planlagt:</span>
+                <span><span id="sumPlanned">0:00</span></span>
+              </div>
+
+              <div class="pill" style="width:100%; justify-content:space-between; margin-top:8px">
+                <span>Mangler til mål:</span>
+                <span id="plannedRemaining">—</span>
+              </div>
+
+              <div class="hint" style="margin-top:8px">
+                Planlæg ved at vælge en dag i kalenderen og udfylde plan-felterne nedenfor.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <!-- Planner editor: ONLY in Month tab -->
+        <div id="plannerWrap">
+          <div class="title" style="font-size:14px; margin-bottom:6px">Planlagte timer (valgt dag)</div>
+
+          <div class="row" style="justify-content:space-between; margin-bottom:10px">
+            <div class="pill" id="planSelectedDay">—</div>
+            <div class="row">
+              <button class="btn" id="btnPlanGoToday" type="button">I dag</button>
+              <button class="btn" id="btnPlanOpenDay" type="button">Åbn dag</button>
+            </div>
+          </div>
+
+          <div class="grid" id="plannedWrapMonth">
+            <div class="field">
+              <label>Planlagt tjeneste</label>
+              <input id="plannedServiceTimeMonth" type="text" placeholder="fx 2:00" />
+            </div>
+            <div class="field" id="plannedBethelFieldWrapMonth">
+              <label>Planlagt Betel</label>
+              <input id="plannedBethelTimeMonth" type="text" placeholder="fx 1:00" />
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:12px; justify-content:space-between">
+            <div class="row">
+              <button class="btn primary" id="btnSavePlan">Gem plan</button>
+              <button class="btn" id="btnClearPlan">Ryd plan</button>
+            </div>
+            <div class="pill" id="planStatus">—</div>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <!-- Report controls (no visible "Månedsrapport" textarea anymore) -->
+        <div class="row" style="justify-content:space-between; align-items:center">
+          <div class="hint">Rapport-teksten genereres automatisk ved Kopiér / SMS / Mail.</div>
+          <button class="btn" id="btnCopyReport">Kopiér rapport</button>
+        </div>
+
+        <div class="row" style="margin-top:10px">
+          <button class="btn primary" id="btnSMS">Åbn SMS</button>
+          <button class="btn primary" id="btnMail">Åbn Mail</button>
+        </div>
+
       </div>
-      <div class="row" style="margin-top:10px">
-        <button class="btn" id="btnSaveMonthNote">Gem måneds-note</button>
-        <button class="btn" id="btnClearMonthNote">Ryd note</button>
+    </section>
+  </section>
+
+  <!-- PAGE: STATISTIK (year + all-time in ONE place) -->
+  <section class="page" id="pageStats">
+    <section class="card">
+      <div class="hd">
+        <div>
+          <div class="title">Statistik</div>
+          <div class="sub">År + total (alle år)</div>
+        </div>
+        <div class="row">
+          <button class="btn" id="btnPrevYear">◀</button>
+          <button class="btn" id="btnNextYear">▶</button>
+        </div>
       </div>
 
-      <div class="hr"></div>
+      <div class="bd">
+        <div class="row" style="justify-content:space-between; align-items:center">
+          <div class="pill">År: <span id="statsYearLabel">—</span></div>
+          <button class="btn" id="btnStatsGoCurrentYear" type="button">Nuværende år</button>
+        </div>
 
-      <div class="field">
-        <label>Rapport-tekst (genereret)</label>
-        <textarea id="reportText" class="mono" readonly></textarea>
-      </div>
+        <div class="hr"></div>
 
-      <div class="row" style="margin-top:10px">
-        <button class="btn" id="btnGenerate">Generér</button>
-        <button class="btn" id="btnCopy">Kopiér</button>
-      </div>
+        <div class="title" style="font-size:14px; margin-bottom:6px">Dette år</div>
+        <div class="statsGrid">
+          <div class="statCard">
+            <div class="k">Tjeneste</div>
+            <div class="v" id="yearService">0:00</div>
+            <div class="s">Samlet for året.</div>
+          </div>
+          <div class="statCard" id="yearBethelCard">
+            <div class="k">Betel</div>
+            <div class="v" id="yearBethel">0:00</div>
+            <div class="s">Kun hvis Betel er slået til.</div>
+          </div>
+          <div class="statCard">
+            <div class="k">Bibelstudier</div>
+            <div class="v" id="yearStudies">0</div>
+            <div class="s">Samlet antal for året.</div>
+          </div>
+          <div class="statCard">
+            <div class="k">Dage logget</div>
+            <div class="v" id="yearDays">0</div>
+            <div class="s">Dage med noget logget (tid eller studier).</div>
+          </div>
+        </div>
 
-      <div class="row" style="margin-top:10px">
-        <button class="btn primary" id="btnSMS">Åbn SMS</button>
-        <button class="btn primary" id="btnMail">Åbn Mail</button>
-      </div>
+        <div class="hr"></div>
 
-      <div class="hint" style="margin-top:10px">
-        “Åbn SMS/Mail” sender ikke automatisk — den åbner bare appen med teksten udfyldt.
+        <div class="title" style="font-size:14px; margin-bottom:6px">Alt (alle år)</div>
+        <div class="statsGrid">
+          <div class="statCard">
+            <div class="k">Tjeneste (total)</div>
+            <div class="v" id="allService">0:00</div>
+            <div class="s">Samlet tjeneste fra alle logs.</div>
+          </div>
+
+          <div class="statCard" id="allBethelCard">
+            <div class="k">Betel (total)</div>
+            <div class="v" id="allBethel">0:00</div>
+            <div class="s">Samlet Betel fra alle logs.</div>
+          </div>
+
+          <div class="statCard">
+            <div class="k">Bibelstudier (total)</div>
+            <div class="v" id="allStudies">0</div>
+            <div class="s">Samlet antal på tværs af alle år.</div>
+          </div>
+
+          <div class="statCard">
+            <div class="k">Dage logget (total)</div>
+            <div class="v" id="allDays">0</div>
+            <div class="s">Dage med noget logget (tid eller studier).</div>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="title" style="font-size:14px; margin-bottom:6px">År (samlet)</div>
+        <div class="field">
+          <textarea id="allYearsText" class="mono" readonly style="min-height: 220px"></textarea>
+        </div>
       </div>
-    </div>
-  </aside>
+    </section>
+  </section>
+
 </div>
 
-<!-- Drawer -->
+<!-- Drawer (Settings) -->
 <div class="backdrop" id="backdrop"></div>
 <aside class="drawer" id="drawer">
   <div class="hd">
     <div>
       <div class="title">Indstillinger</div>
-      <div class="sub">Alt gemmes lokalt på enheden</div>
+      <div class="sub">Lokal lagring · offline</div>
     </div>
     <button class="btn" id="btnClose">Luk</button>
   </div>
 
   <div class="bd">
     <div class="field">
-      <label>Navn (valgfrit)</label>
-      <input id="setName" type="text" placeholder="fx Steph" />
+      <label>Navn</label>
+      <input id="setName" type="text" placeholder="fx William" />
     </div>
 
     <div class="hr"></div>
@@ -514,9 +922,6 @@
         </select>
       </div>
     </div>
-    <div class="hint" style="margin-top:8px">
-      Brug fx 50 pr. måned, eller 600 pr. år. Du kan justere frit.
-    </div>
 
     <div class="hr"></div>
 
@@ -531,7 +936,7 @@
     <div class="toggle">
       <div>
         <div style="font-weight:650">Vis planlagte timer</div>
-        <small>Aktiver “planlagt vs. faktisk” felter.</small>
+        <small>Vis planlægger i Måned-fanen.</small>
       </div>
       <div class="switch" id="setShowPlanned"></div>
     </div>
@@ -540,11 +945,11 @@
 
     <div class="grid">
       <div class="field">
-        <label>SMS-nummer (valgfrit)</label>
+        <label>SMS-nummer</label>
         <input id="setSMS" type="tel" placeholder="fx +45xxxxxxxx" />
       </div>
       <div class="field">
-        <label>Email (valgfrit)</label>
+        <label>Email</label>
         <input id="setEmail" type="email" placeholder="fx ældste@example.com" />
       </div>
     </div>
@@ -552,20 +957,17 @@
     <div class="hr"></div>
 
     <div class="field">
-      <label>Rapport-skabelon</label>
-      <textarea id="setTemplate" class="mono"></textarea>
-      <div class="hint" style="margin-top:8px">
-        Placeholders:
-        <span class="mono">{MONTH}</span>,
-        <span class="mono">{YEAR}</span>,
-        <span class="mono">{NAME}</span>,
-        <span class="mono">{SERVICE}</span>,
-        <span class="mono">{BETHEL}</span>,
-        <span class="mono">{STUDIES}</span>,
-        <span class="mono">{DAYS}</span>,
-        <span class="mono">{MONTH_NOTE}</span>.
+      <label>Tema</label>
+      <div class="themeRow" id="themeRow">
+        <div class="themeSwatch sw-light" data-theme="Lys" title="Lys"></div>
+        <div class="themeSwatch sw-dark" data-theme="dark" title="Mørk"></div>
+        <div class="themeSwatch sw-red" data-theme="Red" title="Rød"></div>
+        <div class="themeSwatch sw-purple" data-theme="Purple" title="Lilla"></div>
+        <div class="themeSwatch sw-green" data-theme="Green" title="Grøn"></div>
       </div>
     </div>
+
+    <div class="hr"></div>
 
     <div class="row" style="margin-top:12px; justify-content:space-between">
       <button class="btn primary" id="btnSaveSettings">Gem indstillinger</button>
@@ -574,6 +976,31 @@
     </div>
   </div>
 </aside>
+
+<!-- Bottom nav -->
+<nav class="bottomNav" aria-label="Navigation">
+  <div class="bottomNavInner">
+    <div class="navItem active" data-tab="today" role="button" aria-label="I dag">
+      <div class="navIcon"><div class="navGlyph">I</div></div>
+      <div class="navLabel">I dag</div>
+    </div>
+
+    <div class="navItem" data-tab="month" role="button" aria-label="Måned">
+      <div class="navIcon"><div class="navGlyph">M</div></div>
+      <div class="navLabel">Måned</div>
+    </div>
+
+    <div class="navItem" data-tab="stats" role="button" aria-label="Statistik">
+      <div class="navIcon"><div class="navGlyph">Σ</div></div>
+      <div class="navLabel">Statistik</div>
+    </div>
+
+    <div class="navItem" data-tab="settings" role="button" aria-label="Indstillinger">
+      <div class="navIcon"><div class="navGlyph">⚙</div></div>
+      <div class="navLabel">Settings</div>
+    </div>
+  </div>
+</nav>
 
 <div class="toast" id="toast">
   <div>
@@ -584,73 +1011,102 @@
 </div>
 
 <script>
-/** ---------------------------
- *  Minimal offline log app
+/** -----------------------------------
+ *  Offline ministry log + month planner + stats + bottom navigation
  *  - localStorage only
- *  - one entry per date
- *  - monthNotes stored per YYYY-MM
- *  --------------------------*/
+ *  - entries: actual logs per date
+ *  - plans: planned minutes per date (ONLY edited in Month tab)
+ *  - monthNotes: notes per YYYY-MM
+ *  - themes: stored in settings
+ *  ----------------------------------- */
 
-const LS_KEY = "ministry_app_v2";
+const LS_KEY = "ministry_app_v3";
+
+function makeMonthlyReport({ monthName, year, name, service, bethel, studies, days, monthNote }){
+  return [
+    `Tjenesterapport – ${monthName} ${year}`,
+    `Navn: ${name || "—"}`,
+    `Tjeneste: ${service}`,
+    `Betel: ${bethel}`,
+    `Bibelstudier: ${studies}`,
+    `Dage logget: ${days}`,
+    `Måneds-note: ${monthNote || "—"}`
+  ].join("\n");
+}
 
 const DEFAULTS = {
   settings: {
     name: "",
     goalHours: 50,
-    goalUnit: "month", // week | month | year
+    goalUnit: "month",     // week | month | year
     showBethel: true,
     showPlanned: false,
     smsNumber: "",
     emailTo: "",
-    template:
-`Tjenesterapport – {MONTH} {YEAR}
-Navn: {NAME}
-Tjeneste: {SERVICE}
-Betel: {BETHEL}
-Bibelstudier: {STUDIES}
-Dage logget: {DAYS}
-Måneds-note: {MONTH_NOTE}`
+    theme: "dark"
   },
   entries: {
-    // "YYYY-MM-DD": { serviceMin, bethelMin, studies, plannedServiceMin, plannedBethelMin }
+    // "YYYY-MM-DD": { serviceMin, bethelMin, studies }
+  },
+  plans: {
+    // "YYYY-MM-DD": { plannedServiceMin, plannedBethelMin }
   },
   monthNotes: {
     // "YYYY-MM": "note text"
   }
 };
 
+function deepClone(obj){ return JSON.parse(JSON.stringify(obj)); }
+
+function migrateState(parsed){
+  const st = {
+    settings: { ...DEFAULTS.settings, ...(parsed?.settings || {}) },
+    entries: { ...(parsed?.entries || {}) },
+    plans: { ...(parsed?.plans || {}) },
+    monthNotes: { ...(parsed?.monthNotes || {}) }
+  };
+
+  // Move any old planned minutes inside entries -> plans
+  for(const [date, e] of Object.entries(st.entries)){
+    if(e && (e.plannedServiceMin || e.plannedBethelMin)){
+      st.plans[date] = {
+        plannedServiceMin: e.plannedServiceMin || 0,
+        plannedBethelMin: e.plannedBethelMin || 0
+      };
+      delete e.plannedServiceMin;
+      delete e.plannedBethelMin;
+
+      const hasActual = (e.serviceMin||0) > 0 || (e.bethelMin||0) > 0 || (e.studies||0) > 0;
+      if(!hasActual) delete st.entries[date];
+    }
+  }
+
+  // Normalize theme values
+  const t = (st.settings.theme || "dark");
+  const map = {
+    "Mørk": "dark",
+    "Lys": "Lys",
+    "Rød": "Red",
+    "Lilla": "Purple",
+    "Grøn": "Green",
+    "light": "Lys"
+  };
+  st.settings.theme = map[t] || t;
+
+  return st;
+}
+
 function loadState(){
   try{
     const raw = localStorage.getItem(LS_KEY);
-    if(!raw) return structuredClone(DEFAULTS);
-    const parsed = JSON.parse(raw);
-    return {
-      settings: { ...DEFAULTS.settings, ...(parsed.settings || {}) },
-      entries: { ...(parsed.entries || {}) },
-      monthNotes: { ...(parsed.monthNotes || {}) }
-    };
+    if(!raw) return deepClone(DEFAULTS);
+    return migrateState(JSON.parse(raw));
   } catch {
-    return structuredClone(DEFAULTS);
+    return deepClone(DEFAULTS);
   }
 }
 function saveState(){
   localStorage.setItem(LS_KEY, JSON.stringify(state));
-}
-
-function toast(msg, small="", buttonText=""){
-  const t = $("#toast");
-  $("#toastMsg").textContent = msg;
-  $("#toastSmall").textContent = small;
-  const btn = $("#toastBtn");
-  if(buttonText){
-    btn.style.display = "inline-flex";
-    btn.textContent = buttonText;
-    btn.onclick = ()=> t.classList.remove("show");
-  } else {
-    btn.style.display = "none";
-  }
-  t.classList.add("show");
-  setTimeout(()=> t.classList.remove("show"), 2600);
 }
 
 function $(sel){ return document.querySelector(sel); }
@@ -660,10 +1116,17 @@ function todayISO(){
   return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
 }
 function monthKeyFromISO(iso){ return iso.slice(0,7); }
+function isoFromParts(y, m1, d){ return `${y}-${pad2(m1)}-${pad2(d)}`; }
+
 function monthNameDA(mIndex){
   const names = ["Januar","Februar","Marts","April","Maj","Juni","Juli","August","September","Oktober","November","December"];
   return names[mIndex] || "";
 }
+function weekdayNameDA(jsDow){
+  const names = ["Søndag","Mandag","Tirsdag","Onsdag","Torsdag","Fredag","Lørdag"];
+  return names[jsDow] || "";
+}
+
 function parseTimeToMinutes(input){
   const s = (input || "").trim().toLowerCase();
   if(!s) return 0;
@@ -682,12 +1145,12 @@ function parseTimeToMinutes(input){
     const n = Number(s.slice(0,-1));
     return Number.isFinite(n) && n >= 0 ? Math.round(n) : NaN;
   }
-
   if(s.endsWith("h")){
     const n = Number(s.slice(0,-1));
     return Number.isFinite(n) && n >= 0 ? Math.round(n * 60) : NaN;
   }
 
+  // plain number => hours
   const n = Number(s);
   return Number.isFinite(n) && n >= 0 ? Math.round(n * 60) : NaN;
 }
@@ -702,32 +1165,49 @@ function addDaysISO(iso, delta){
   d.setDate(d.getDate() + delta);
   return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
 }
-function isoFromParts(y, m1, d){
-  return `${y}-${pad2(m1)}-${pad2(d)}`;
+
+function toast(msg, small="", buttonText=""){
+  const t = $("#toast");
+  $("#toastMsg").textContent = msg;
+  $("#toastSmall").textContent = small;
+  const btn = $("#toastBtn");
+  if(buttonText){
+    btn.style.display = "inline-flex";
+    btn.textContent = buttonText;
+    btn.onclick = ()=> t.classList.remove("show");
+  } else {
+    btn.style.display = "none";
+  }
+  t.classList.add("show");
+  setTimeout(()=> t.classList.remove("show"), 2600);
 }
 
 let state = loadState();
 let currentDate = todayISO();
 let currentMonthAnchor = currentDate.slice(0,7) + "-01";
+let yearAnchor = currentDate.slice(0,4);
+
+// Selected day for planning in Month tab
+let planSelectedDate = currentDate;
 
 /** UI refs */
 const ui = {
+  // pages
+  pageToday: $("#pageToday"),
+  pageMonth: $("#pageMonth"),
+  pageStats: $("#pageStats"),
+
+  // today
   dateLabel: $("#dateLabel"),
-  dateInput: $("#dateInput"),
+  dayDisplay: $("#dayDisplay"),
   bibleStudies: $("#bibleStudies"),
   serviceTime: $("#serviceTime"),
   bethelTime: $("#bethelTime"),
-  plannedServiceTime: $("#plannedServiceTime"),
-  plannedBethelTime: $("#plannedBethelTime"),
-
   bethelFieldWrap: $("#bethelFieldWrap"),
-  plannedWrap: $("#plannedWrap"),
-  plannedBethelFieldWrap: $("#plannedBethelFieldWrap"),
-
   dayStatus: $("#dayStatus"),
-  subtitle: $("#subtitle"),
 
-  monthLabel: $("#monthLabel"),
+  // month
+  monthSubtitle: $("#monthSubtitle"),
   sumService: $("#sumService"),
   sumBethel: $("#sumBethel"),
   sumBethelWrap: $("#sumBethelWrap"),
@@ -737,16 +1217,37 @@ const ui = {
   progressText: $("#progressText"),
   meterFill: $("#meterFill"),
   goalHint: $("#goalHint"),
-  reportText: $("#reportText"),
-
   calHead: $("#calHead"),
   calGrid: $("#calGrid"),
-
   monthNote: $("#monthNote"),
+  sumPlanned: $("#sumPlanned"),
+  plannedRemaining: $("#plannedRemaining"),
 
+  // month planner
+  plannerWrap: $("#plannerWrap"),
+  planSelectedDay: $("#planSelectedDay"),
+  plannedServiceTimeMonth: $("#plannedServiceTimeMonth"),
+  plannedBethelTimeMonth: $("#plannedBethelTimeMonth"),
+  plannedBethelFieldWrapMonth: $("#plannedBethelFieldWrapMonth"),
+  planStatus: $("#planStatus"),
+
+  // stats
+  statsYearLabel: $("#statsYearLabel"),
+  yearService: $("#yearService"),
+  yearBethel: $("#yearBethel"),
+  yearBethelCard: $("#yearBethelCard"),
+  yearStudies: $("#yearStudies"),
+  yearDays: $("#yearDays"),
+  allService: $("#allService"),
+  allBethel: $("#allBethel"),
+  allBethelCard: $("#allBethelCard"),
+  allStudies: $("#allStudies"),
+  allDays: $("#allDays"),
+  allYearsText: $("#allYearsText"),
+
+  // drawer/settings
   drawer: $("#drawer"),
   backdrop: $("#backdrop"),
-
   setName: $("#setName"),
   setGoalHours: $("#setGoalHours"),
   setGoalUnit: $("#setGoalUnit"),
@@ -754,7 +1255,7 @@ const ui = {
   setShowPlanned: $("#setShowPlanned"),
   setSMS: $("#setSMS"),
   setEmail: $("#setEmail"),
-  setTemplate: $("#setTemplate"),
+  themeRow: $("#themeRow")
 };
 
 function openDrawer(){
@@ -773,69 +1274,90 @@ function switchGet(el){
   return el.dataset.on === "1";
 }
 
+function applyTheme(theme){
+  const t = theme || "dark";
+  document.documentElement.setAttribute("data-theme", t);
+
+  ui.themeRow.querySelectorAll(".themeSwatch").forEach(sw => {
+    sw.classList.toggle("active", sw.dataset.theme === t);
+  });
+
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if(meta){
+    const map = {
+      "Lys": "#ffffff",
+      "dark": "#111827",
+      "Red": "#1a0b10",
+      "Purple": "#120b22",
+      "Green": "#061a14"
+    };
+    meta.setAttribute("content", map[t] || "#111827");
+  }
+}
+
 function applySettingsToUI(){
   const s = state.settings;
 
-  ui.subtitle.textContent = s.name ? `Hej, ${s.name} · lokal lagring` : "Offline webapp · lokal lagring";
-
+  // bethel visibility
   ui.bethelFieldWrap.style.display = s.showBethel ? "" : "none";
   ui.sumBethelWrap.style.display = s.showBethel ? "" : "none";
+  ui.yearBethelCard.style.display = s.showBethel ? "" : "none";
+  ui.allBethelCard.style.display = s.showBethel ? "" : "none";
+  ui.plannedBethelFieldWrapMonth.style.display = (s.showBethel ? "" : "none");
 
-  ui.plannedWrap.style.display = s.showPlanned ? "" : "none";
-  ui.plannedBethelFieldWrap.style.display = (s.showPlanned && s.showBethel) ? "" : "none";
+  // planner visibility (ONLY month tab)
+  ui.plannerWrap.style.display = s.showPlanned ? "" : "none";
 
+  // settings fields
   ui.setName.value = s.name || "";
   ui.setGoalHours.value = s.goalHours ?? 0;
   ui.setGoalUnit.value = s.goalUnit || "month";
   ui.setSMS.value = s.smsNumber || "";
   ui.setEmail.value = s.emailTo || "";
-  ui.setTemplate.value = s.template || DEFAULTS.settings.template;
 
   switchSet(ui.setShowBethel, !!s.showBethel);
   switchSet(ui.setShowPlanned, !!s.showPlanned);
+
+  applyTheme(s.theme || "dark");
+}
+
+function getEntry(iso){ return state.entries?.[iso] || null; }
+function getPlan(iso){ return state.plans?.[iso] || null; }
+
+function entryHasAnyData(e){
+  if(!e) return false;
+  const mins = (e.serviceMin||0) + (e.bethelMin||0);
+  return mins > 0 || (e.studies||0) > 0;
+}
+function planHasAnyData(p){
+  if(!p) return false;
+  const mins = (p.plannedServiceMin||0) + (p.plannedBethelMin||0);
+  return mins > 0;
+}
+
+function totalMinutesForEntry(e){
+  const s = state.settings;
+  if(!e) return 0;
+  return (e.serviceMin||0) + (s.showBethel ? (e.bethelMin||0) : 0);
+}
+
+function updateDayHeader(iso){
+  const d = new Date(iso + "T00:00:00");
+  ui.dateLabel.textContent = `${d.getDate()}. ${monthNameDA(d.getMonth())} ${d.getFullYear()}`;
+  ui.dayDisplay.textContent = `${weekdayNameDA(d.getDay())} · ${d.getDate()}. ${monthNameDA(d.getMonth())}`;
 }
 
 function loadEntryToForm(iso){
   currentDate = iso;
-  ui.dateInput.value = iso;
 
-  const entry = state.entries[iso] || {};
-  ui.bibleStudies.value = entry.studies ?? 0;
-  ui.serviceTime.value = entry.serviceMin ? minutesToHHMM(entry.serviceMin) : "";
-  ui.bethelTime.value = entry.bethelMin ? minutesToHHMM(entry.bethelMin) : "";
+  const e = getEntry(iso) || {};
 
-  ui.plannedServiceTime.value = entry.plannedServiceMin ? minutesToHHMM(entry.plannedServiceMin) : "";
-  ui.plannedBethelTime.value = entry.plannedBethelMin ? minutesToHHMM(entry.plannedBethelMin) : "";
+  ui.bibleStudies.value = e.studies ?? 0;
+  ui.serviceTime.value = e.serviceMin ? minutesToHHMM(e.serviceMin) : "";
+  ui.bethelTime.value = e.bethelMin ? minutesToHHMM(e.bethelMin) : "";
 
-  const d = new Date(iso + "T00:00:00");
-  ui.dateLabel.textContent = `${d.getDate()}. ${monthNameDA(d.getMonth())} ${d.getFullYear()}`;
+  updateDayHeader(iso);
   updateDayStatus();
-}
-
-function updateDayStatus(){
-  const iso = currentDate;
-  const e = state.entries[iso];
-  const s = state.settings;
-
-  if(!e){
-    ui.dayStatus.textContent = "Ingen log for dagen";
-    ui.dayStatus.style.borderColor = "rgba(31,41,55,.8)";
-    ui.dayStatus.style.color = "var(--muted)";
-    return;
-  }
-
-  const dayMin = (e.serviceMin||0) + (s.showBethel ? (e.bethelMin||0) : 0);
-  const dayHours = dayMin / 60;
-
-  const perDayTarget = estimateDailyTargetHours(s.goalHours, s.goalUnit, iso);
-  const ok = perDayTarget > 0 ? dayHours >= perDayTarget : dayHours > 0;
-
-  ui.dayStatus.textContent = perDayTarget > 0
-    ? (ok ? `Mål nået i dag ✓ (${dayHours.toFixed(2)}h / ${perDayTarget.toFixed(2)}h)` : `Ikke nået (${dayHours.toFixed(2)}h / ${perDayTarget.toFixed(2)}h)`)
-    : (dayHours > 0 ? `Logget: ${dayHours.toFixed(2)}h` : "Tom dag");
-
-  ui.dayStatus.style.borderColor = ok ? "rgba(52,211,153,.55)" : "rgba(251,191,36,.45)";
-  ui.dayStatus.style.color = ok ? "var(--ok)" : "var(--warn)";
 }
 
 function estimateDailyTargetHours(goalHours, unit, iso){
@@ -858,53 +1380,61 @@ function estimateDailyTargetHours(goalHours, unit, iso){
   return 0;
 }
 
-function entryHasAnyData(e){
-  if(!e) return false;
-  const mins = (e.serviceMin||0) + (e.bethelMin||0);
-  return mins > 0 || (e.studies||0) > 0 || (e.plannedServiceMin||0) > 0 || (e.plannedBethelMin||0) > 0;
-}
+function updateDayStatus(){
+  const iso = currentDate;
+  const s = state.settings;
+  const e = getEntry(iso);
 
-function saveEntryFromForm(){
-  const iso = ui.dateInput.value;
-  if(!iso){
-    toast("Vælg en dato først");
+  const actualMin = e ? ((e.serviceMin||0) + (s.showBethel ? (e.bethelMin||0) : 0)) : 0;
+  const actualH = actualMin / 60;
+
+  const perDayTarget = estimateDailyTargetHours(s.goalHours, s.goalUnit, iso);
+  const ok = perDayTarget > 0 ? actualH >= perDayTarget : actualH > 0;
+
+  if(!e){
+    ui.dayStatus.textContent = "Ingen log for dagen";
+    ui.dayStatus.style.borderColor = "rgba(31,41,55,.8)";
+    ui.dayStatus.style.color = "var(--muted)";
     return;
   }
 
+  const parts = [];
+  if(actualMin > 0) parts.push(`Log: ${actualH.toFixed(2)}h`);
+  if(e && (e.studies||0) > 0) parts.push(`Studier: ${e.studies}`);
+
+  ui.dayStatus.textContent = parts.join(" · ") || "Data gemt";
+  ui.dayStatus.style.borderColor = ok ? "rgba(52,211,153,.55)" : "rgba(251,191,36,.45)";
+  ui.dayStatus.style.color = ok ? "var(--ok)" : "var(--warn)";
+}
+
+function saveActualFromForm(){
+  const iso = currentDate;
+
   const serviceMin = parseTimeToMinutes(ui.serviceTime.value);
   const bethelMin = parseTimeToMinutes(ui.bethelTime.value);
-  const plannedServiceMin = parseTimeToMinutes(ui.plannedServiceTime.value);
-  const plannedBethelMin = parseTimeToMinutes(ui.plannedBethelTime.value);
 
-  if([serviceMin, bethelMin, plannedServiceMin, plannedBethelMin].some(v => Number.isNaN(v))){
+  if([serviceMin, bethelMin].some(v => Number.isNaN(v))){
     toast("Tidsformat fejl", "Brug fx 1:30, 90m, 1.5h");
     return;
   }
 
   const studies = Math.max(0, Number(ui.bibleStudies.value || 0));
 
-  const hasAny =
+  const hasActual =
     (serviceMin || 0) > 0 ||
     (bethelMin || 0) > 0 ||
-    studies > 0 ||
-    (plannedServiceMin || 0) > 0 ||
-    (plannedBethelMin || 0) > 0;
+    studies > 0;
 
-  if(!hasAny){
+  if(!state.entries) state.entries = {};
+  if(hasActual){
+    state.entries[iso] = {
+      serviceMin: serviceMin || 0,
+      bethelMin: bethelMin || 0,
+      studies: Number.isFinite(studies) ? studies : 0
+    };
+  } else {
     delete state.entries[iso];
-    saveState();
-    toast("Dagen er tom", "Ingen data gemt");
-    refreshAll();
-    return;
   }
-
-  state.entries[iso] = {
-    serviceMin: serviceMin || 0,
-    bethelMin: bethelMin || 0,
-    plannedServiceMin: plannedServiceMin || 0,
-    plannedBethelMin: plannedBethelMin || 0,
-    studies: Number.isFinite(studies) ? studies : 0
-  };
 
   saveState();
   toast("Gemt", iso);
@@ -912,45 +1442,54 @@ function saveEntryFromForm(){
 }
 
 function clearDay(){
-  const iso = ui.dateInput.value;
-  if(!iso) return;
+  const iso = currentDate;
+  if(!confirm("Ryd dagen? (sletter log for dagen)")) return;
   delete state.entries[iso];
   saveState();
   toast("Rykket", "Dagen er ryddet");
   refreshAll();
 }
 
-function monthEntries(year, monthIndex){
-  const res = [];
-  const ym = `${year}-${pad2(monthIndex+1)}`;
-  for(const [date, entry] of Object.entries(state.entries)){
-    if(date.startsWith(ym)){
-      res.push({ date, entry });
-    }
-  }
-  res.sort((a,b)=> a.date.localeCompare(b.date));
-  return res;
-}
-
 function calcMonthSummary(anchorISO){
   const d = new Date(anchorISO + "T00:00:00");
   const year = d.getFullYear();
   const monthIndex = d.getMonth();
+  const ym = `${year}-${pad2(monthIndex+1)}`;
 
-  const items = monthEntries(year, monthIndex);
   let serviceMin = 0, bethelMin = 0, studies = 0, daysLogged = 0;
 
-  for(const it of items){
-    serviceMin += it.entry.serviceMin || 0;
-    bethelMin += it.entry.bethelMin || 0;
-    studies += it.entry.studies || 0;
-    if(entryHasAnyData(it.entry)) daysLogged += 1;
+  const keys = Object.keys(state.entries || {}).filter(k => k.startsWith(ym));
+  for(const date of keys){
+    const e = state.entries[date];
+    serviceMin += e.serviceMin || 0;
+    bethelMin += e.bethelMin || 0;
+    studies += e.studies || 0;
+    if(entryHasAnyData(e)) daysLogged += 1;
   }
 
   return { year, monthIndex, days: daysLogged, serviceMin, bethelMin, studies };
 }
 
-function goalForDisplayedPeriod(summary){
+function calcMonthPlanned(anchorISO){
+  const d = new Date(anchorISO + "T00:00:00");
+  const year = d.getFullYear();
+  const monthIndex = d.getMonth();
+  const ym = `${year}-${pad2(monthIndex+1)}`;
+
+  let plannedServiceMin = 0, plannedBethelMin = 0, plannedDays = 0;
+
+  const keys = Object.keys(state.plans || {}).filter(k => k.startsWith(ym));
+  for(const date of keys){
+    const p = state.plans[date];
+    plannedServiceMin += p.plannedServiceMin || 0;
+    plannedBethelMin += p.plannedBethelMin || 0;
+    if(planHasAnyData(p)) plannedDays += 1;
+  }
+
+  return { year, monthIndex, plannedDays, plannedServiceMin, plannedBethelMin };
+}
+
+function goalForDisplayedMonth(summary){
   const s = state.settings;
   const goalHours = Number(s.goalHours) || 0;
   if(goalHours <= 0) return { goalMin: 0, label: "Intet mål sat" };
@@ -974,9 +1513,10 @@ function getMonthNote(ym){
   return (state.monthNotes?.[ym] ?? "").trim();
 }
 
-function generateReportText(summary){
+function generateReportTextForCurrentMonth(){
+  const summary = calcMonthSummary(currentMonthAnchor);
   const s = state.settings;
-  const month = monthNameDA(summary.monthIndex);
+  const monthName = monthNameDA(summary.monthIndex);
   const year = summary.year;
 
   const service = minutesToHHMM(summary.serviceMin);
@@ -988,16 +1528,7 @@ function generateReportText(summary){
   const ym = `${summary.year}-${pad2(summary.monthIndex+1)}`;
   const monthNote = getMonthNote(ym) || "—";
 
-  const tpl = (s.template || DEFAULTS.settings.template);
-  return tpl
-    .replaceAll("{MONTH}", month)
-    .replaceAll("{YEAR}", String(year))
-    .replaceAll("{NAME}", name)
-    .replaceAll("{SERVICE}", service)
-    .replaceAll("{BETHEL}", bethel)
-    .replaceAll("{STUDIES}", String(studies))
-    .replaceAll("{DAYS}", String(days))
-    .replaceAll("{MONTH_NOTE}", monthNote);
+  return makeMonthlyReport({ monthName, year, name, service, bethel, studies, days, monthNote });
 }
 
 function refreshCalendar(){
@@ -1006,27 +1537,28 @@ function refreshCalendar(){
   const monthIndex = d.getMonth();
   const daysInMonth = new Date(year, monthIndex+1, 0).getDate();
 
-  // Head labels (Mon..Sun)
   const labels = ["Man","Tir","Ons","Tor","Fre","Lør","Søn"];
   ui.calHead.innerHTML = labels.map(l => `<div>${l}</div>`).join("");
 
-  // Determine first day offset (Monday=0)
   const first = new Date(year, monthIndex, 1);
-  const jsDow = first.getDay(); // Sun=0
-  const mon0 = (jsDow + 6) % 7; // Mon=0..Sun=6
+  const jsDow = first.getDay();          // Sun=0
+  const mon0 = (jsDow + 6) % 7;          // Mon=0..Sun=6
 
-  // Build a 6-week grid (42 cells)
-  const cells = [];
   const today = todayISO();
   const ym = `${year}-${pad2(monthIndex+1)}`;
 
-  // Precompute which dates are "logged"
   const loggedSet = new Set();
-  for(const [date, entry] of Object.entries(state.entries)){
+  for(const [date, entry] of Object.entries(state.entries || {})){
     if(date.startsWith(ym) && entryHasAnyData(entry)) loggedSet.add(date);
   }
 
+  const plannedSet = new Set();
+  for(const [date, plan] of Object.entries(state.plans || {})){
+    if(date.startsWith(ym) && planHasAnyData(plan)) plannedSet.add(date);
+  }
+
   const totalCells = 42;
+  const cells = [];
   for(let i=0; i<totalCells; i++){
     const dayNum = i - mon0 + 1;
     if(dayNum < 1 || dayNum > daysInMonth){
@@ -1037,8 +1569,9 @@ function refreshCalendar(){
     const iso = isoFromParts(year, monthIndex+1, dayNum);
     const classes = ["dayCell"];
     if(iso === today) classes.push("today");
-    if(iso === currentDate) classes.push("selected");
+    if(iso === planSelectedDate) classes.push("selected");
     if(loggedSet.has(iso)) classes.push("logged");
+    if(plannedSet.has(iso)) classes.push("planned");
 
     cells.push(`
       <div class="${classes.join(" ")}" data-iso="${iso}" title="${iso}">
@@ -1050,15 +1583,18 @@ function refreshCalendar(){
 
   ui.calGrid.innerHTML = cells.join("");
 
-  // Click binding
   ui.calGrid.querySelectorAll("[data-iso]").forEach(el => {
     el.addEventListener("click", () => {
       const iso = el.dataset.iso;
       if(!iso) return;
-      currentDate = iso;
+
+      planSelectedDate = iso;
+      // keep anchors aligned with selected month
       currentMonthAnchor = iso.slice(0,7) + "-01";
-      refreshAll();
-      // small UX: scroll to top on mobile maybe
+      yearAnchor = iso.slice(0,4);
+
+      refreshMonthPanel();
+      refreshPlannerEditor();
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
   });
@@ -1071,16 +1607,17 @@ function refreshMonthNoteUI(){
 
 function refreshMonthPanel(){
   const d = new Date(currentMonthAnchor + "T00:00:00");
-  const summary = calcMonthSummary(currentMonthAnchor);
+  ui.monthSubtitle.textContent = `${monthNameDA(d.getMonth())} ${d.getFullYear()}`;
 
-  ui.monthLabel.textContent = `${monthNameDA(d.getMonth())} ${d.getFullYear()}`;
+  const summary = calcMonthSummary(currentMonthAnchor);
+  const planned = calcMonthPlanned(currentMonthAnchor);
 
   ui.sumService.textContent = minutesToHHMM(summary.serviceMin);
   ui.sumBethel.textContent = minutesToHHMM(summary.bethelMin);
   ui.sumStudies.textContent = String(summary.studies);
   ui.sumDays.textContent = String(summary.days);
 
-  const goal = goalForDisplayedPeriod(summary);
+  const goal = goalForDisplayedMonth(summary);
   ui.goalText.textContent = goal.label;
 
   const totalMin = summary.serviceMin + (state.settings.showBethel ? summary.bethelMin : 0);
@@ -1094,18 +1631,185 @@ function refreshMonthPanel(){
     ? `Estimat: ~${perDay.toFixed(2)} timer pr. dag (fordelt over perioden). Dage i måneden: ${daysInMonth}.`
     : "Sæt et mål i indstillinger for at se progress.";
 
+  const plannedMin = planned.plannedServiceMin + (state.settings.showBethel ? planned.plannedBethelMin : 0);
+  ui.sumPlanned.textContent = minutesToHHMM(plannedMin);
+
+  if(goal.goalMin > 0){
+    const remain = Math.max(0, goal.goalMin - plannedMin);
+    ui.plannedRemaining.textContent = minutesToHHMM(remain);
+  } else {
+    ui.plannedRemaining.textContent = "—";
+  }
+
   refreshCalendar();
   refreshMonthNoteUI();
+}
 
-  ui.reportText.value = generateReportText(summary);
+function formatPlanSelectedLabel(iso){
+  const d = new Date(iso + "T00:00:00");
+  return `${weekdayNameDA(d.getDay())} · ${d.getDate()}. ${monthNameDA(d.getMonth())} ${d.getFullYear()}`;
+}
+
+function refreshPlannerEditor(){
+  ui.planSelectedDay.textContent = formatPlanSelectedLabel(planSelectedDate);
+
+  const p = getPlan(planSelectedDate) || {};
+  ui.plannedServiceTimeMonth.value = p.plannedServiceMin ? minutesToHHMM(p.plannedServiceMin) : "";
+  ui.plannedBethelTimeMonth.value = p.plannedBethelMin ? minutesToHHMM(p.plannedBethelMin) : "";
+
+  const plannedMin = (p.plannedServiceMin||0) + (state.settings.showBethel ? (p.plannedBethelMin||0) : 0);
+  if(plannedMin > 0){
+    ui.planStatus.textContent = `Plan: ${minutesToHHMM(plannedMin)}`;
+    ui.planStatus.style.borderColor = "rgba(52,211,153,.55)";
+    ui.planStatus.style.color = "var(--ok)";
+  } else {
+    ui.planStatus.textContent = "Ingen plan for dagen";
+    ui.planStatus.style.borderColor = "rgba(31,41,55,.8)";
+    ui.planStatus.style.color = "var(--muted)";
+  }
+}
+
+function savePlanForSelectedDay(){
+  const iso = planSelectedDate;
+
+  const plannedServiceMin = parseTimeToMinutes(ui.plannedServiceTimeMonth.value);
+  const plannedBethelMin = parseTimeToMinutes(ui.plannedBethelTimeMonth.value);
+
+  if([plannedServiceMin, plannedBethelMin].some(v => Number.isNaN(v))){
+    toast("Tidsformat fejl", "Brug fx 1:30, 90m, 1.5h");
+    return;
+  }
+
+  const hasPlan =
+    (plannedServiceMin || 0) > 0 ||
+    (plannedBethelMin || 0) > 0;
+
+  if(!state.plans) state.plans = {};
+  if(state.settings.showPlanned && hasPlan){
+    state.plans[iso] = {
+      plannedServiceMin: plannedServiceMin || 0,
+      plannedBethelMin: plannedBethelMin || 0
+    };
+  } else {
+    delete state.plans[iso];
+  }
+
+  saveState();
+  toast("Plan gemt", iso);
+  refreshAll();
+}
+
+function clearPlanForSelectedDay(){
+  const iso = planSelectedDate;
+  if(!confirm("Ryd plan for denne dag?")) return;
+  delete state.plans[iso];
+  saveState();
+  toast("Plan ryddet", iso);
+  refreshAll();
+}
+
+function calcYearSummary(yearStr){
+  const y = String(yearStr);
+  let serviceMin = 0, bethelMin = 0, studies = 0, daysLogged = 0;
+
+  for(const [date, e] of Object.entries(state.entries || {})){
+    if(!date.startsWith(y + "-")) continue;
+    serviceMin += e.serviceMin || 0;
+    bethelMin += e.bethelMin || 0;
+    studies += e.studies || 0;
+    if(entryHasAnyData(e)) daysLogged += 1;
+  }
+
+  return { year: y, serviceMin, bethelMin, studies, daysLogged };
+}
+
+function calcAllTime(){
+  let serviceMin = 0, bethelMin = 0, studies = 0, daysLogged = 0;
+
+  for(const e of Object.values(state.entries || {})){
+    serviceMin += e.serviceMin || 0;
+    bethelMin += e.bethelMin || 0;
+    studies += e.studies || 0;
+    if(entryHasAnyData(e)) daysLogged += 1;
+  }
+  return { serviceMin, bethelMin, studies, daysLogged };
+}
+
+function calcAllYearsBreakdown(){
+  const byYear = new Map(); // year -> {serviceMin, bethelMin, studies, days}
+  for(const [date, e] of Object.entries(state.entries || {})){
+    const y = date.slice(0,4);
+    if(!byYear.has(y)) byYear.set(y, { serviceMin:0, bethelMin:0, studies:0, days:0 });
+    const row = byYear.get(y);
+    row.serviceMin += e.serviceMin || 0;
+    row.bethelMin += e.bethelMin || 0;
+    row.studies += e.studies || 0;
+    if(entryHasAnyData(e)) row.days += 1;
+  }
+
+  const years = Array.from(byYear.keys()).sort();
+  const lines = years.map(y => {
+    const r = byYear.get(y);
+    const totalMin = r.serviceMin + (state.settings.showBethel ? r.bethelMin : 0);
+    const b = state.settings.showBethel ? ` · Betel ${minutesToHHMM(r.bethelMin)}` : "";
+    return `${y}: Total ${minutesToHHMM(totalMin)} · Tjeneste ${minutesToHHMM(r.serviceMin)}${b} · Studier ${r.studies} · Dage ${r.days}`;
+  });
+
+  return lines.join("\n") || "—";
+}
+
+function refreshStatsPanel(){
+  ui.statsYearLabel.textContent = yearAnchor;
+
+  const y = calcYearSummary(yearAnchor);
+  ui.yearService.textContent = minutesToHHMM(y.serviceMin);
+  ui.yearBethel.textContent = minutesToHHMM(y.bethelMin);
+  ui.yearStudies.textContent = String(y.studies);
+  ui.yearDays.textContent = String(y.daysLogged);
+
+  const all = calcAllTime();
+  ui.allService.textContent = minutesToHHMM(all.serviceMin);
+  ui.allBethel.textContent = minutesToHHMM(all.bethelMin);
+  ui.allStudies.textContent = String(all.studies);
+  ui.allDays.textContent = String(all.daysLogged);
+
+  ui.allYearsText.value = calcAllYearsBreakdown();
 }
 
 function refreshAll(){
   applySettingsToUI();
   loadEntryToForm(currentDate);
+  // keep plan selected date inside displayed month when possible
+  if(!planSelectedDate) planSelectedDate = currentDate;
+
   refreshMonthPanel();
+  refreshPlannerEditor();
+  refreshStatsPanel();
 }
 
+/* Navigation */
+function setActiveTab(tab){
+  document.querySelectorAll(".navItem").forEach(it => {
+    it.classList.toggle("active", it.dataset.tab === tab);
+  });
+
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  if(tab === "today") ui.pageToday.classList.add("active");
+  if(tab === "month") ui.pageMonth.classList.add("active");
+  if(tab === "stats") ui.pageStats.classList.add("active");
+}
+
+function navigate(tab){
+  if(tab === "settings"){
+    openDrawer();
+    return;
+  }
+  setActiveTab(tab);
+  closeDrawer();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+/* External actions */
 function openSMS(phone, body){
   const encoded = encodeURIComponent(body);
   const p = (phone || "").trim();
@@ -1137,25 +1841,33 @@ function copyText(text){
   });
 }
 
-/** Events */
-$("#btnSettings").addEventListener("click", openDrawer);
+/** ----------------
+ *  Events
+ *  ---------------- */
 $("#btnClose").addEventListener("click", closeDrawer);
 ui.backdrop.addEventListener("click", closeDrawer);
 
-$("#btnToday").addEventListener("click", ()=> {
+document.querySelectorAll(".navItem").forEach(it => {
+  it.addEventListener("click", ()=> navigate(it.dataset.tab));
+});
+
+$("#btnGotoToday").addEventListener("click", ()=> {
   currentDate = todayISO();
   currentMonthAnchor = currentDate.slice(0,7) + "-01";
+  yearAnchor = currentDate.slice(0,4);
   refreshAll();
 });
 
 $("#btnPrevDay").addEventListener("click", ()=> {
   currentDate = addDaysISO(currentDate, -1);
   currentMonthAnchor = currentDate.slice(0,7) + "-01";
+  yearAnchor = currentDate.slice(0,4);
   refreshAll();
 });
 $("#btnNextDay").addEventListener("click", ()=> {
   currentDate = addDaysISO(currentDate, +1);
   currentMonthAnchor = currentDate.slice(0,7) + "-01";
+  yearAnchor = currentDate.slice(0,4);
   refreshAll();
 });
 
@@ -1163,26 +1875,44 @@ $("#btnPrevMonth").addEventListener("click", ()=> {
   const d = new Date(currentMonthAnchor + "T00:00:00");
   d.setMonth(d.getMonth() - 1);
   currentMonthAnchor = `${d.getFullYear()}-${pad2(d.getMonth()+1)}-01`;
-  // keep currentDate inside month: choose 1st
-  currentDate = currentMonthAnchor;
+
+  // keep planSelectedDate inside month (set to 1st)
+  planSelectedDate = currentMonthAnchor;
+  yearAnchor = String(d.getFullYear());
+
   refreshAll();
 });
 $("#btnNextMonth").addEventListener("click", ()=> {
   const d = new Date(currentMonthAnchor + "T00:00:00");
   d.setMonth(d.getMonth() + 1);
   currentMonthAnchor = `${d.getFullYear()}-${pad2(d.getMonth()+1)}-01`;
-  currentDate = currentMonthAnchor;
+
+  planSelectedDate = currentMonthAnchor;
+  yearAnchor = String(d.getFullYear());
+
   refreshAll();
 });
 
-ui.dateInput.addEventListener("change", (e)=> {
-  currentDate = e.target.value || currentDate;
+$("#btnPlanGoToday").addEventListener("click", ()=> {
+  const t = todayISO();
+  planSelectedDate = t;
+  currentMonthAnchor = t.slice(0,7) + "-01";
+  yearAnchor = t.slice(0,4);
+  refreshAll();
+});
+$("#btnPlanOpenDay").addEventListener("click", ()=> {
+  currentDate = planSelectedDate;
   currentMonthAnchor = currentDate.slice(0,7) + "-01";
+  yearAnchor = currentDate.slice(0,4);
   refreshAll();
+  navigate("today");
 });
 
-$("#btnSave").addEventListener("click", saveEntryFromForm);
+$("#btnSave").addEventListener("click", saveActualFromForm);
 $("#btnClear").addEventListener("click", clearDay);
+
+$("#btnSavePlan").addEventListener("click", savePlanForSelectedDay);
+$("#btnClearPlan").addEventListener("click", clearPlanForSelectedDay);
 
 $("#btnSaveMonthNote").addEventListener("click", ()=> {
   const ym = monthKeyFromISO(currentMonthAnchor);
@@ -1191,7 +1921,7 @@ $("#btnSaveMonthNote").addEventListener("click", ()=> {
   state.monthNotes[ym] = text;
   saveState();
   toast("Gemt", `Måneds-note: ${ym}`);
-  refreshMonthPanel();
+  refreshAll();
 });
 
 $("#btnClearMonthNote").addEventListener("click", ()=> {
@@ -1202,32 +1932,53 @@ $("#btnClearMonthNote").addEventListener("click", ()=> {
   saveState();
   ui.monthNote.value = "";
   toast("Rykket", `Måneds-note ryddet: ${ym}`);
-  refreshMonthPanel();
+  refreshAll();
 });
 
-$("#btnGenerate").addEventListener("click", ()=> {
-  refreshMonthPanel();
-  toast("Genereret", "Rapport-tekst opdateret");
+$("#btnCopyReport").addEventListener("click", ()=> {
+  copyText(generateReportTextForCurrentMonth());
 });
-$("#btnCopy").addEventListener("click", ()=> copyText(ui.reportText.value));
 
 $("#btnSMS").addEventListener("click", ()=> {
-  const summary = calcMonthSummary(currentMonthAnchor);
-  const text = generateReportText(summary);
+  const text = generateReportTextForCurrentMonth();
   openSMS(state.settings.smsNumber, text);
 });
 
 $("#btnMail").addEventListener("click", ()=> {
   const d = new Date(currentMonthAnchor + "T00:00:00");
-  const summary = calcMonthSummary(currentMonthAnchor);
-  const body = generateReportText(summary);
+  const body = generateReportTextForCurrentMonth();
   const subject = `Tjenesterapport – ${monthNameDA(d.getMonth())} ${d.getFullYear()}`;
   openEmail(state.settings.emailTo, subject, body);
+});
+
+/** Stats year nav */
+$("#btnPrevYear").addEventListener("click", ()=> {
+  yearAnchor = String(Number(yearAnchor) - 1);
+  refreshStatsPanel();
+});
+$("#btnNextYear").addEventListener("click", ()=> {
+  yearAnchor = String(Number(yearAnchor) + 1);
+  refreshStatsPanel();
+});
+$("#btnStatsGoCurrentYear").addEventListener("click", ()=> {
+  yearAnchor = todayISO().slice(0,4);
+  refreshStatsPanel();
 });
 
 /** Settings toggles */
 ui.setShowBethel.addEventListener("click", ()=> switchSet(ui.setShowBethel, !switchGet(ui.setShowBethel)));
 ui.setShowPlanned.addEventListener("click", ()=> switchSet(ui.setShowPlanned, !switchGet(ui.setShowPlanned)));
+
+/** Theme picker */
+ui.themeRow.querySelectorAll(".themeSwatch").forEach(sw => {
+  sw.addEventListener("click", ()=> {
+    const t = sw.dataset.theme || "dark";
+    state.settings.theme = t;
+    saveState();
+    applyTheme(t);
+    toast("Tema skiftet", t);
+  });
+});
 
 $("#btnSaveSettings").addEventListener("click", ()=> {
   const goalHours = Number(ui.setGoalHours.value || 0);
@@ -1240,7 +1991,6 @@ $("#btnSaveSettings").addEventListener("click", ()=> {
   state.settings.showPlanned = switchGet(ui.setShowPlanned);
   state.settings.smsNumber = (ui.setSMS.value || "").trim();
   state.settings.emailTo = (ui.setEmail.value || "").trim();
-  state.settings.template = (ui.setTemplate.value || "").trim() || DEFAULTS.settings.template;
 
   saveState();
   toast("Indstillinger gemt");
@@ -1249,35 +1999,39 @@ $("#btnSaveSettings").addEventListener("click", ()=> {
 });
 
 $("#btnResetAll").addEventListener("click", ()=> {
-  if(!confirm("Nulstil ALT? (sletter alle logs, måneds-noter og indstillinger)")) return;
-  state = structuredClone(DEFAULTS);
+  if(!confirm("Nulstil ALT? (sletter logs, planer, noter og indstillinger)")) return;
+  state = deepClone(DEFAULTS);
   saveState();
   toast("Nulstillet", "Alt er slettet");
   closeDrawer();
   currentDate = todayISO();
   currentMonthAnchor = currentDate.slice(0,7) + "-01";
+  yearAnchor = currentDate.slice(0,4);
+  planSelectedDate = currentDate;
   refreshAll();
+  navigate("today");
 });
 
 $("#btnResetTimes").addEventListener("click", ()=> {
-  if(!confirm("Nulstil AL tid? (sletter alle dags-logs, men beholder indstillinger + måneds-noter)")) return;
-
+  if(!confirm("Nulstil al tid? (sletter logs + planer, men beholder indstillinger + måneds-noter)")) return;
   state.entries = {};
+  state.plans = {};
   saveState();
-
-  toast("Tider nulstillet", "Alle dags-logs er slettet");
+  toast("Nulstillet", "Logs + planer er slettet");
   closeDrawer();
-
   currentDate = todayISO();
   currentMonthAnchor = currentDate.slice(0,7) + "-01";
+  yearAnchor = currentDate.slice(0,4);
+  planSelectedDate = currentDate;
   refreshAll();
 });
 
 /** Init */
 (function init(){
-  ui.dateInput.value = currentDate;
-  currentMonthAnchor = currentDate.slice(0,7) + "-01";
+  applyTheme(state.settings.theme || "dark");
+  planSelectedDate = currentDate;
   refreshAll();
+  navigate("today");
 })();
 </script>
 </body>
